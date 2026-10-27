@@ -1,0 +1,10 @@
+{
+  "repo": { "owner": "", "name": "", "branch": "main" },
+  "urlPublica": "",
+  "seguridad": {
+    "salt": "F/HW7gBZ0OhyLbJ8OE//Hg==",
+    "iteraciones": 310000,
+    "verificador": "2vcODExU+pO0m5MjifswrRvNUfbwfjRmi4H/wHZNt/s="
+  },
+  "tokenCifrado": null
+}
