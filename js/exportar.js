@@ -186,10 +186,11 @@ export async function etiquetaQR({ titulo, eyebrow, detalle, url, pie, logoBlanc
 
 /* ---------------------------------------------------------- Matriz completa */
 
-export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src }) {
+export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src, lis = () => '', unidades = [] }) {
   await asegurarFuentes();
   const [logo, foto] = await Promise.all([cargarImg(logoBlanco), cargarImg(equipo.imagen ? src(equipo.imagen) : '')]);
   const fotosLub = await Promise.all(lubricantes.map((l) => cargarImg(l.imagen ? src(l.imagen) : '')));
+  const lisImgs = await Promise.all(equipo.puntos.map((p) => cargarImg(lis(p.codigoLIS) ? src(lis(p.codigoLIS)) : '')));
 
   const W = 2400, PAD = 80, CW = W - PAD * 2;
   const medir = crearCanvas(10, 10).getContext('2d');
@@ -226,6 +227,13 @@ export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src }
       maxH = Math.max(maxH, h);
     });
     yy += 40 + maxH;
+    if (unidades.length) {
+      yy += 30;
+      const fl = [...new Set(unidades.map((u) => u.flota).filter(Boolean))].join(', ');
+      const mo = [...new Set(unidades.map((u) => u.modelo).filter(Boolean))].join(', ');
+      L.fuente(26, 600); L.texto(`EQUIPOS (${unidades.length})${fl ? ` · FLOTA ${fl.toUpperCase()}` : ''}${mo ? ` · MODELO ${mo.toUpperCase()}` : ''}`, PAD, yy + 26, C.tinta3);
+      yy += 40 + L.parrafo(unidades.map((u) => u.equipo).join(', '), PAD, yy + 34, infoW, 32, 600, C.tinta, 1.3);
+    }
     const qx = W - PAD - qrLado;
     L.rect(qx, y, qrLado, qrLado, '#FFFFFF', 20, C.linea, 3);
     if (!L.seco) dibujarQR(c, url, qx + 14, y + 14, qrLado - 28, { oscuro: C.tinta });
@@ -291,7 +299,7 @@ export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src }
     // ---- Tabla de puntos
     const conNivel = equipo.puntos.some((p) => !vacio(p.revisionNivel));
     let cols = [
-      ['Punto', 130], ['Componente', 300], ['Código lubricante (LIS)', 290], ['Lubricante', 380],
+      ['Punto', 130], ['Componente', 270], ['Código lubricante (LIS)', 330], ['Lubricante', 370],
       ['Cantidad total (gal)', 200], ['Tarea', 180], ['Intervalo de cambio de aceite', 280], ['Método', 190], ['Intervalo de muestreo (h)', 290],
     ];
     if (conNivel) {
@@ -327,7 +335,8 @@ export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src }
         L.fuente(29, k === 1 ? 700 : 500, F.txt, cel.vacio);
         return envolver(c, cel.t, cols[k][1] - 36);
       });
-      const h = Math.max(96, Math.max(...lineas.map((l) => l.length)) * 38 + 44);
+      const li = lisImgs[i];
+      const h = Math.max(96, Math.max(...lineas.map((l, k) => l.length + (k === 2 && li ? 1 : 0))) * 38 + 44);
       L.rect(PAD, y, CW, h, i % 2 ? C.fondo : '#FFFFFF');
       L.rect(PAD, y + h - 2, CW, 2, C.linea);
       // número
@@ -340,8 +349,11 @@ export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src }
         if (k === 0) return;
         const cel = celdas[k];
         L.fuente(29, k === 1 ? 700 : 500, F.txt, cel.vacio);
-        const top = y + (h - ls.length * 38) / 2 - 6;
-        ls.forEach((l, j) => L.texto(l, cx + 18, top + 29 + j * 38, cel.vacio ? C.tinta3 : C.tinta));
+        const conImg = k === 2 && li;
+        const top = y + (h - (ls.length + (conImg ? 1 : 0)) * 38) / 2 - 6;
+        if (conImg) L.img(li, cx + 18, top + 6, 96, 30);
+        const desf = conImg ? 38 : 0;
+        ls.forEach((l, j) => L.texto(l, cx + 18, top + desf + 29 + j * 38, cel.vacio ? C.tinta3 : C.tinta));
         cx += cols[k][1];
       });
       y += h;

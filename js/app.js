@@ -57,6 +57,7 @@ const urlBase = () => {
   return location.origin + location.pathname.replace(/index\.html$/, '');
 };
 const urlEquipo = (id) => `${urlBase()}?eq=${encodeURIComponent(id)}`;
+const urlUnidad = (codigo) => `${urlBase()}?u=${encodeURIComponent(codigo)}`;
 const src = (ruta) => estado.imagenesLocales[ruta] || ruta;
 const plantilla = () => (estado.datos && estado.datos.plantilla) || {};
 const lugarGeneral = () => plantilla().lugar || 'Proyecto Buriticá';
@@ -78,6 +79,8 @@ function fichasSueltas(eq) {
   const usados = new Set(lubricantesDe(eq).filter((l) => l.ficha).map((l) => l.clave));
   return (eq.fichas || []).filter((f) => f.url && !usados.has(clave(f.nombre)));
 }
+const lisSrc = (code) => { const c = String(code || '').trim(); return (estado.datos.lis || {})[c] || ''; };
+const lisImg = (code) => (lisSrc(code) ? `<img class="lis" src="${esc(src(lisSrc(code)))}" alt="Color LIS ${esc(code)}">` : '');
 const urlSegura = (u) => (/^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '');
 
 function dato(v, unidad = '') {
@@ -90,6 +93,7 @@ function dato(v, unidad = '') {
 /* ------------------------------------------------------------- Navegación */
 function leerRuta() {
   const p = new URLSearchParams(location.search);
+  if (p.get('u')) return { vista: 'unidad', codigo: p.get('u'), id: p.get('eq') || '' };
   if (p.get('eq')) return { vista: 'matriz', id: p.get('eq') };
   const panel = p.get('panel');
   if (panel === 'editar') return { vista: 'editar', id: p.get('id') || '' };
@@ -98,6 +102,7 @@ function leerRuta() {
 }
 function rutaURL(r) {
   const base = location.pathname;
+  if (r.vista === 'unidad') return `${base}?u=${encodeURIComponent(r.codigo)}${r.id ? `&eq=${encodeURIComponent(r.id)}` : ''}`;
   if (r.vista === 'matriz') return `${base}?eq=${encodeURIComponent(r.id)}`;
   if (r.vista === 'editar') return `${base}?panel=editar${r.id ? `&id=${encodeURIComponent(r.id)}` : ''}`;
   if (r.vista === 'nueva' || r.vista === 'historial') return `${base}?panel=${r.vista}`;
@@ -127,6 +132,8 @@ async function puedeSalirDelEditor(destino) {
 
 async function render(r) {
   rutaActual = r;
+  const acc = $('#acciones-admin');
+  if (acc) acc.hidden = r.vista !== 'inicio';
   cerrarCapa(false);
   window.scrollTo(0, 0);
   if (['editar', 'nueva', 'historial'].includes(r.vista)) {
@@ -140,6 +147,7 @@ async function render(r) {
     if (r.id) return vistaEditor(r.id);
     return vistaSelector();
   }
+  if (r.vista === 'unidad') return vistaUnidad(r);
   if (r.vista === 'matriz') return vistaMatriz(r.id);
   return vistaInicio();
 }
@@ -197,8 +205,26 @@ function pie(texto) {
 }
 
 /* ------------------------------------------------------------------ Inicio */
+const FILTROS = [['flota', 'Flota'], ['modelo', 'Modelo'], ['equipo', 'Equipo']];
+estado.filtros = { flota: new Set(), modelo: new Set(), equipo: new Set() };
+estado.q = '';
+
+function mapaIH08() {
+  if (estado._ihDe !== estado.datos) {
+    estado._ihDe = estado.datos;
+    estado._ih = new Map((estado.datos.ih08 || []).map((u) => [u.equipo, u]));
+  }
+  return estado._ih;
+}
+function unidadesDe(eq) {
+  const m = mapaIH08();
+  return (eq.unidades || []).map((c) => m.get(c) || { equipo: c, modelo: '', flota: '', descripcion: '' });
+}
+const unicos = (xs) => [...new Set(xs.filter(Boolean))];
 function textoBusqueda(eq) {
-  return sinAcentos([eq.activo, eq.codigo, eq.lugar, ...(eq.puntos || []).flatMap((p) => [p.componente, p.lubricante, p.codigoLIS])].join(' ')).toLowerCase();
+  return sinAcentos([eq.activo, eq.codigo, eq.lugar,
+    ...(eq.puntos || []).flatMap((p) => [p.componente, p.lubricante, p.codigoLIS]),
+    ...unidadesDe(eq).flatMap((u) => [u.equipo, u.modelo, u.flota, u.descripcion])].join(' ')).toLowerCase();
 }
 function resaltar(texto, terminos) {
   let h = esc(texto);
@@ -220,47 +246,157 @@ function resaltar(texto, terminos) {
   return out + esc(texto.slice(pos));
 }
 
+const hayFiltros = () => FILTROS.some(([f]) => estado.filtros[f].size);
+function unidadPasa(u, excepto = '') {
+  return FILTROS.every(([f]) => f === excepto || !estado.filtros[f].size || estado.filtros[f].has(u[f]));
+}
+
 function tarjetaEquipo(eq, terminos, accion = 'ver') {
   const n = (eq.puntos || []).length;
-  const comps = (eq.puntos || []).map((p) => p.componente).filter(Boolean).join(' · ');
+  const us = unidadesDe(eq);
+  const flotas = unicos(us.map((u) => u.flota)).join(' · ');
+  const modelos = unicos(us.map((u) => u.modelo));
+  const coincid = accion === 'ver' && hayFiltros() ? us.filter((u) => unidadPasa(u)).map((u) => u.equipo) : [];
+  const foto = eq.foto || eq.imagen;
   const href = accion === 'ver' ? `?eq=${encodeURIComponent(eq.id)}` : `?panel=editar&id=${encodeURIComponent(eq.id)}`;
   return `<li><a class="tarjeta-equipo" href="${href}" data-${accion === 'ver' ? 'ir' : 'editar'}="${esc(eq.id)}">
-    <span class="miniatura">${eq.imagen ? `<img src="${esc(src(eq.imagen))}" alt="" loading="lazy">` : I('equipo')}</span>
+    <span class="miniatura foto">${foto ? `<img src="${esc(src(foto))}" alt="" loading="lazy">` : I('equipo')}</span>
     <span class="te-cuerpo">
       <span class="te-nombre">${resaltar(eq.activo, terminos)}</span>
-      <span class="te-meta">${eq.codigo ? `Código ${resaltar(eq.codigo, terminos)}` : 'Sin código'} · ${n} punto${n === 1 ? '' : 's'}</span>
-      <span class="te-comp">${resaltar(comps, terminos)}</span>
+      <span class="te-meta">${flotas ? `${resaltar(flotas, terminos)} · ` : ''}${modelos.length ? `${resaltar(modelos.slice(0, 2).join(', '), terminos)}${modelos.length > 2 ? '…' : ''} · ` : ''}${n} punto${n === 1 ? '' : 's'}</span>
+      <span class="te-comp">${coincid.length
+        ? `Equipo${coincid.length === 1 ? '' : 's'}: ${resaltar(coincid.join(', '), terminos)}`
+        : us.length ? `${us.length} equipo${us.length === 1 ? '' : 's'}: ${resaltar(us.map((u) => u.equipo).join(', '), terminos)}` : 'Sin equipos asociados'}</span>
     </span>${I('der')}</a></li>`;
 }
 
-function listaFiltrada(q) {
+function listaFiltrada(q, usarFiltros = true) {
   const terminos = sinAcentos(q).toLowerCase().split(/\s+/).filter(Boolean);
   const eqs = [...estado.datos.equipos].sort((a, b) => a.activo.localeCompare(b.activo, 'es'));
-  return { terminos, lista: eqs.filter((e) => { const t = textoBusqueda(e); return terminos.every((x) => t.includes(x)); }) };
+  return {
+    terminos,
+    lista: eqs.filter((e) => {
+      const t = textoBusqueda(e);
+      if (!terminos.every((x) => t.includes(x))) return false;
+      return !usarFiltros || !hayFiltros() || unidadesDe(e).some((u) => unidadPasa(u));
+    }),
+  };
+}
+
+/** Opciones de un filtro según los demás filtros activos (filtros encadenados). */
+function opcionesFiltro(f) {
+  const cuenta = new Map(), vistos = new Set();
+  estado.datos.equipos.forEach((eq) => unidadesDe(eq).forEach((u) => {
+    if (vistos.has(u.equipo) || !unidadPasa(u, f)) return;
+    vistos.add(u.equipo);
+    const v = u[f];
+    if (!v) return;
+    cuenta.set(v, (cuenta.get(v) || 0) + 1);
+  }));
+  estado.filtros[f].forEach((v) => { if (!cuenta.has(v)) cuenta.set(v, 0); });
+  const m = mapaIH08();
+  return [...cuenta.entries()].sort((a, b) => a[0].localeCompare(b[0], 'es', { numeric: true }))
+    .map(([v, n]) => ({ v, n, extra: f === 'equipo' ? (m.get(v) || {}).modelo || '' : '' }));
+}
+
+function htmlFiltros() {
+  return `<div class="filtros" id="filtros">
+    ${FILTROS.map(([f, etq]) => `<div class="filtro" data-filtro="${f}">
+      <button type="button" class="filtro-btn" aria-expanded="false" aria-controls="fp-${f}">
+        <span>${etq}</span><span class="filtro-n" hidden></span>${I('abajo', 'i-peq')}</button>
+      <div class="filtro-panel" id="fp-${f}" role="dialog" aria-label="Filtrar por ${etq.toLowerCase()}" hidden>
+        <div class="filtro-cab"><b>${etq}</b><button type="button" class="btn btn-icono btn-fantasma btn-peq" data-cerrar-filtro aria-label="Cerrar">${I('x')}</button></div>
+        <div class="filtro-buscar">${I('buscar', 'i-peq')}<input type="search" placeholder="Buscar ${etq.toLowerCase()}" aria-label="Buscar ${etq.toLowerCase()}" autocomplete="off"></div>
+        <ul class="filtro-opciones" role="group" aria-label="Opciones de ${etq.toLowerCase()}"></ul>
+        <div class="filtro-pie"><button type="button" class="btn btn-fantasma btn-peq" data-limpiar-filtro>${I('basura', 'i-peq')} Limpiar</button><button type="button" class="btn btn-primario btn-peq" data-cerrar-filtro>Listo</button></div>
+      </div>
+    </div>`).join('')}
+    <button type="button" class="btn btn-fantasma btn-peq borrar-todo" id="borrar-filtros">${I('x', 'i-peq')} Borrar todos los filtros</button>
+  </div>
+  <div class="chips-filtros" id="chips-filtros"></div>`;
 }
 
 function montarBuscador(accion) {
-  const input = $('#q'), limpiar = $('#q-limpiar');
+  const input = $('#q'), limpiar = $('#q-limpiar'), caja = $('#filtros');
+  if (caja) input.value = estado.q;
+  const pintarOpciones = (fd) => {
+    const f = fd.dataset.filtro, q = sinAcentos($('.filtro-buscar input', fd).value).toLowerCase();
+    const ops = opcionesFiltro(f).filter((o) => !q || sinAcentos(`${o.v} ${o.extra}`).toLowerCase().includes(q));
+    $('.filtro-opciones', fd).innerHTML = ops.length ? ops.map((o) => `<li><label class="opcion-f">
+        <input type="checkbox" value="${esc(o.v)}" ${estado.filtros[f].has(o.v) ? 'checked' : ''}>
+        <span>${esc(o.v)}${o.extra ? ` <small>${esc(o.extra)}</small>` : ''}</span><span class="cnt">${o.n}</span></label></li>`).join('')
+      : '<li class="filtro-vacio">Sin coincidencias</li>';
+  };
   const pintar = () => {
-    const { terminos, lista } = listaFiltrada(input.value);
+    if (caja) estado.q = input.value;
+    const { terminos, lista } = listaFiltrada(input.value, !!caja);
     limpiar.hidden = !input.value;
     const total = estado.datos.equipos.length;
-    $('#conteo').textContent = terminos.length
-      ? `${lista.length} de ${total} equipo${total === 1 ? '' : 's'}`
-      : `${total} equipo${total === 1 ? '' : 's'} registrado${total === 1 ? '' : 's'}`;
+    const activo = terminos.length || (caja && hayFiltros());
+    $('#conteo').textContent = activo
+      ? `${lista.length} de ${total} matrices`
+      : `${total} matrices · ${(estado.datos.ih08 || []).length ? `${new Set(estado.datos.equipos.flatMap((e) => e.unidades || [])).size} equipos` : ''}`;
     $('#lista').innerHTML = lista.length
       ? lista.map((e) => tarjetaEquipo(e, terminos, accion)).join('')
-      : `<li class="sin-resultados">No se encontraron equipos para «${esc(input.value)}».<br>Pruebe con el nombre, el código o el lubricante.</li>`;
+      : `<li class="sin-resultados">No hay matrices con esa búsqueda o filtros.<br>Pruebe con otro término o borre los filtros.</li>`;
+    if (caja) {
+      FILTROS.forEach(([f]) => {
+        const n = estado.filtros[f].size, b = $(`[data-filtro="${f}"] .filtro-n`, caja);
+        b.hidden = !n; b.textContent = n;
+        $(`[data-filtro="${f}"] .filtro-btn`, caja).classList.toggle('activo', !!n);
+      });
+      $('#borrar-filtros').disabled = !activo;
+      $('#chips-filtros').innerHTML = FILTROS.flatMap(([f, etq]) => [...estado.filtros[f]].map((v) =>
+        `<button type="button" class="chip-f" data-quitar="${f}" data-v="${esc(v)}" aria-label="Quitar ${etq} ${esc(v)}"><small>${etq}</small> ${esc(v)} ${I('x', 'i-peq')}</button>`)).join('');
+      $$('.filtro-panel:not([hidden])', caja).forEach((p) => pintarOpciones(p.closest('.filtro')));
+    }
   };
   input.addEventListener('input', debounce(pintar, 80));
   limpiar.addEventListener('click', () => { input.value = ''; pintar(); input.focus(); });
+  if (caja) {
+    const cerrar = (fd) => { $('.filtro-panel', fd).hidden = true; $('.filtro-btn', fd).setAttribute('aria-expanded', 'false'); document.body.classList.remove('filtro-abierto'); };
+    const cerrarTodos = () => $$('.filtro', caja).forEach(cerrar);
+    caja.addEventListener('click', (e) => {
+      const fd = e.target.closest('.filtro');
+      if (e.target.closest('#borrar-filtros')) {
+        FILTROS.forEach(([f]) => estado.filtros[f].clear()); input.value = ''; cerrarTodos(); pintar(); return;
+      }
+      if (!fd) return;
+      if (e.target.closest('.filtro-btn')) {
+        const abierto = !$('.filtro-panel', fd).hidden;
+        cerrarTodos();
+        if (!abierto) {
+          $('.filtro-panel', fd).hidden = false; $('.filtro-btn', fd).setAttribute('aria-expanded', 'true');
+          document.body.classList.add('filtro-abierto');
+          $('.filtro-buscar input', fd).value = '';
+          pintarOpciones(fd);
+          if (window.matchMedia('(min-width: 720px)').matches) $('.filtro-buscar input', fd).focus();
+        }
+        return;
+      }
+      if (e.target.closest('[data-cerrar-filtro]')) { cerrar(fd); $('.filtro-btn', fd).focus(); return; }
+      if (e.target.closest('[data-limpiar-filtro]')) { estado.filtros[fd.dataset.filtro].clear(); pintar(); }
+    });
+    caja.addEventListener('change', (e) => {
+      if (e.target.type !== 'checkbox') return;
+      const f = e.target.closest('.filtro').dataset.filtro;
+      if (e.target.checked) estado.filtros[f].add(e.target.value); else estado.filtros[f].delete(e.target.value);
+      pintar();
+    });
+    caja.addEventListener('input', (e) => { if (e.target.closest('.filtro-buscar')) pintarOpciones(e.target.closest('.filtro')); });
+    caja.addEventListener('keydown', (e) => { if (e.key === 'Escape') { const fd = e.target.closest('.filtro'); if (fd) { cerrar(fd); $('.filtro-btn', fd).focus(); e.stopPropagation(); } } });
+    $('#chips-filtros').addEventListener('click', (e) => {
+      const c = e.target.closest('[data-quitar]');
+      if (c) { estado.filtros[c.dataset.quitar].delete(c.dataset.v); pintar(); }
+    });
+  }
   pintar();
 }
 
 function htmlBuscador(placeholder) {
   return `<div class="buscador" role="search">
     ${I('buscar')}
-    <input id="q" type="search" placeholder="${esc(placeholder)}" aria-label="Buscar equipo" autocomplete="off" enterkeyhint="search">
+    <input id="q" type="search" placeholder="${esc(placeholder)}" aria-label="Buscar" autocomplete="off" enterkeyhint="search">
     <button type="button" class="btn btn-icono btn-fantasma limpiar" id="q-limpiar" hidden aria-label="Limpiar búsqueda">${I('x')}</button>
   </div>`;
 }
@@ -272,14 +408,10 @@ function vistaInicio() {
     <p class="eyebrow">${esc(plantilla().departamento || 'Departamento de Tribología')}</p>
     <h1>Matrices de lubricación</h1>
     <p class="lead">Cambio de aceite por equipo · ${esc(lugarGeneral())}</p>
-    ${htmlBuscador('Buscar equipo, código, componente o lubricante')}
-    <div class="acciones-admin">
-      <button type="button" class="btn btn-sec btn-peq" data-accion="editar">${I('lapiz')} Editar matriz ${I('candado', 'i-peq candado')}</button>
-      <button type="button" class="btn btn-sec btn-peq" data-accion="nueva">${I('mas')} Nueva matriz ${I('candado', 'i-peq candado')}</button>
-      <button type="button" class="btn btn-fantasma btn-peq" data-accion="historial">${I('historial')} Historial</button>
-    </div>
+    ${htmlBuscador('Buscar equipo, código, modelo, componente o lubricante')}
+    ${htmlFiltros()}
   </section>
-  <section class="contenedor" aria-label="Equipos">
+  <section class="contenedor" aria-label="Matrices">
     <p class="conteo" id="conteo" aria-live="polite"></p>
     <ul class="tarjetas" id="lista"></ul>
     <div class="qr-inicio">
@@ -296,7 +428,34 @@ function vistaInicio() {
 }
 
 /* ------------------------------------------------------------------ Matriz */
-function vistaMatriz(id) {
+/** QR de un equipo (?u=DL001): abre la matriz que le corresponde. */
+function vistaUnidad(r) {
+  const cod = String(r.codigo || '').trim();
+  const u = mapaIH08().get(cod) || { equipo: cod };
+  const ms = estado.datos.equipos.filter((e) => (e.unidades || []).includes(cod));
+  const elegida = ms.find((e) => e.id === r.id);
+  if (elegida || ms.length === 1) { rutaActual.id = (elegida || ms[0]).id; return vistaMatriz(rutaActual.id, cod); }
+  if (!ms.length) {
+    document.title = `Equipo ${cod}`;
+    app.innerHTML = `<div class="estado-vacio contenedor"><div class="d-icono">${I('qr')}</div>
+      <h1>${esc(cod)} no tiene matriz asignada</h1>
+      <p>${u.descripcion ? `${esc(u.descripcion)}. ` : ''}Este equipo aún no está asociado a ninguna matriz de cambio de aceite. Búsquelo desde el inicio o pida a un editor que lo asigne.</p>
+      <a class="btn btn-primario" href="./" data-nav="inicio">${I('buscar')} Ir al buscador</a></div>`;
+    return;
+  }
+  document.title = `Equipo ${cod} · Matrices`;
+  app.innerHTML = `<div class="barra"><div class="contenedor barra-in"><a class="btn btn-fantasma" href="./" data-nav="inicio">${I('izq')} Inicio</a></div></div>
+    <section class="contenedor vista-admin">
+      <p class="eyebrow">Equipo ${esc(cod)}${u.modelo ? ` · ${esc(u.modelo)}` : ''}${u.flota ? ` · ${esc(u.flota)}` : ''}</p>
+      <h1>Seleccione la matriz</h1>
+      <p class="lead">Este equipo tiene ${ms.length} matrices de cambio de aceite registradas.</p>
+      <ul class="tarjetas" style="margin-top:18px">${ms.map((e) => `<li><a class="tarjeta-equipo" href="?u=${encodeURIComponent(cod)}&eq=${encodeURIComponent(e.id)}" data-unidad-ir="${esc(cod)}" data-eq="${esc(e.id)}">
+        <span class="miniatura foto">${(e.foto || e.imagen) ? `<img src="${esc(src(e.foto || e.imagen))}" alt="">` : I('equipo')}</span>
+        <span class="te-cuerpo"><span class="te-nombre">${esc(e.activo)}</span><span class="te-meta">${e.puntos.length} puntos · elaborada ${esc(fechaCorta(e.fechaElaboracion))}</span></span>${I('der')}</a></li>`).join('')}</ul>
+    </section>${pie()}`;
+}
+
+function vistaMatriz(id, unidad = '') {
   const eq = estado.datos.equipos.find((e) => e.id === id);
   if (!eq) {
     document.title = 'Matriz no encontrada';
@@ -308,7 +467,8 @@ function vistaMatriz(id) {
     </div>`;
     return;
   }
-  document.title = `${eq.activo} · Matriz de cambio de aceite`;
+  document.title = `${unidad ? `${unidad} · ` : ''}${eq.activo} · Matriz de cambio de aceite`;
+  const uSel = unidad ? (mapaIH08().get(unidad) || { equipo: unidad }) : null;
   const lubs = lubricantesDe(eq);
   const pa = eq.primerosAuxilios || {};
   const filas = eq.puntos.map((p, i) => `
@@ -318,7 +478,7 @@ function vistaMatriz(id) {
       <dl class="p-datos">
         <div class="destacado"><dt>Cantidad total</dt><dd>${dato(p.cantidad, 'gal')}</dd></div>
         <div class="destacado"><dt>Cambio de aceite</dt><dd>${dato(p.intervaloCambio)}</dd></div>
-        <div><dt>Código LIS</dt><dd>${dato(p.codigoLIS)}</dd></div>
+        <div><dt>Código LIS</dt><dd>${lisImg(p.codigoLIS)}${dato(p.codigoLIS)}</dd></div>
         <div><dt>Muestreo</dt><dd>${dato(p.intervaloMuestreo, 'h')}</dd></div>
         <div><dt>Método</dt><dd>${dato(p.metodo)}</dd></div>
         <div><dt>Tarea</dt><dd>${dato(p.tarea)}</dd></div>
@@ -327,7 +487,7 @@ function vistaMatriz(id) {
     </li>`).join('');
   const conNivel = eq.puntos.some((p) => !vacio(p.revisionNivel));
   const tabla = eq.puntos.map((p, i) => `<tr>
-      <td><span class="num">${i + 1}</span></td><td class="comp">${esc(p.componente || '—')}</td><td>${dato(p.codigoLIS)}</td>
+      <td><span class="num">${i + 1}</span></td><td class="comp">${esc(p.componente || '—')}</td><td>${lisImg(p.codigoLIS)}${dato(p.codigoLIS)}</td>
       <td>${dato(p.lubricante)}</td><td>${dato(p.cantidad, 'gal')}</td><td>${dato(p.tarea)}</td>
       <td>${dato(p.intervaloCambio)}</td><td>${dato(p.metodo)}</td><td>${dato(p.intervaloMuestreo, 'h')}</td>${conNivel ? `<td>${vacio(p.revisionNivel) ? '—' : dato(p.revisionNivel)}</td>` : ''}</tr>`).join('');
   const sueltas = fichasSueltas(eq);
@@ -345,12 +505,17 @@ function vistaMatriz(id) {
     <header class="m-cabecera">
       <div>
         <p class="eyebrow">Matriz de cambio de aceite</p>
+        ${uSel ? `<p class="unidad-actual">${I('qr', 'i-peq')} Equipo <b>${esc(uSel.equipo)}</b>${uSel.descripcion ? ` <span>${esc(uSel.descripcion)}</span>` : ''}</p>` : ''}
         <h1>${esc(eq.activo)}</h1>
         <div class="chips">
           <span class="chip chip-marca">${eq.codigo ? `Código <b>${esc(eq.codigo)}</b>` : 'Sin código'}</span>
           <span class="chip">${esc(eq.lugar || lugarGeneral())}</span>
           <span class="chip">${eq.puntos.length} punto${eq.puntos.length === 1 ? '' : 's'}</span>
+          ${unicos(unidadesDe(eq).map((u) => u.flota)).map((f) => `<span class="chip">Flota <b>${esc(f)}</b></span>`).join('')}
+          ${unicos(unidadesDe(eq).map((u) => u.modelo)).map((m) => `<span class="chip">Modelo <b>${esc(m)}</b></span>`).join('')}
         </div>
+        ${unidadesDe(eq).length ? `<details class="unidades"><summary>Aplica a ${unidadesDe(eq).length} equipo${unidadesDe(eq).length === 1 ? '' : 's'}</summary>
+          <ul>${unidadesDe(eq).map((u) => `<li><a href="?u=${encodeURIComponent(u.equipo)}&eq=${encodeURIComponent(eq.id)}" data-unidad-ir="${esc(u.equipo)}" data-eq="${esc(eq.id)}" ${u.equipo === unidad ? 'aria-current="true"' : ''}><b>${esc(u.equipo)}</b><small>${esc([u.modelo, u.flota].filter(Boolean).join(' · '))}</small></a></li>`).join('')}</ul></details>` : ''}
         <dl class="m-fechas">
           <div><dt>Elaboración</dt><dd>${esc(fechaCorta(eq.fechaElaboracion) || '—')}</dd></div>
           <div><dt>Última actualización</dt><dd>${esc(eq.actualizado ? fechaCorta(eq.actualizado) : '—')}</dd></div>
@@ -394,23 +559,63 @@ function vistaMatriz(id) {
   if (foto) { if (foto.complete && foto.naturalWidth) ajustar(); else foto.addEventListener('load', ajustar); }
 }
 
-function hojaDescarga(eq) {
+function etiquetaUnidad(eq, u) {
+  return etiquetaQR({
+    titulo: u.equipo, eyebrow: 'Matriz de cambio de aceite',
+    detalle: [eq.activo, u.flota].filter(Boolean).join(' · '),
+    url: urlUnidad(u.equipo), pie: `${eq.departamento || 'Departamento de Tribología'} · ${eq.lugar || lugarGeneral()}`, logoBlanco: LOGO_BLANCO,
+  });
+}
+function cargarJSZip() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  return new Promise((res, rej) => {
+    const sc = document.createElement('script');
+    sc.src = 'js/vendor/jszip.min.js';
+    sc.onload = () => res(window.JSZip);
+    sc.onerror = () => rej(new Error('No se pudo cargar el compresor ZIP'));
+    document.head.appendChild(sc);
+  });
+}
+
+function hojaDescarga(eq, unidad = '') {
+  const us = unidadesDe(eq);
+  const pre = us.find((u) => u.equipo === unidad) ? unidad : (us[0] || {}).equipo || '';
   abrirCapa(`<div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="t-desc">
     <h2 id="t-desc">Descargar</h2>
-    <p>${esc(eq.activo)} · seleccione qué imagen desea descargar.</p>
-    <button type="button" class="opcion" data-desc="qr"><span class="op-icono">${I('qr')}</span><span><b>Código QR del equipo</b><small>Etiqueta PNG para imprimir y pegar en el equipo</small></span></button>
+    <p>${esc(eq.activo)} · seleccione qué desea descargar.</p>
+    ${us.length ? `<div class="opcion opcion-sel">
+        <span class="op-icono">${I('qr')}</span>
+        <span style="flex:1;min-width:0"><b>QR de un equipo</b><small>Etiqueta PNG para pegar en el equipo seleccionado</small>
+          <span class="fila-sel"><select id="d-unidad" aria-label="Equipo">${us.map((u) => `<option value="${esc(u.equipo)}" ${u.equipo === pre ? 'selected' : ''}>${esc(u.equipo)}${u.modelo ? ` · ${esc(u.modelo)}` : ''}</option>`).join('')}</select>
+          <button type="button" class="btn btn-primario btn-peq" data-desc="qr-unidad">${I('descargar', 'i-peq')} Descargar</button></span></span>
+      </div>
+      ${us.length > 1 ? `<button type="button" class="opcion" data-desc="qr-todos"><span class="op-icono">${I('qr')}</span><span><b>QR de todos los equipos (${us.length})</b><small>Archivo ZIP con una etiqueta PNG por equipo</small></span></button>` : ''}` : ''}
+    <button type="button" class="opcion" data-desc="qr"><span class="op-icono">${I('qr')}</span><span><b>QR general de la matriz</b><small>Etiqueta PNG de la matriz, sin equipo específico</small></span></button>
     <button type="button" class="opcion" data-desc="matriz"><span class="op-icono">${I('doc')}</span><span><b>Matriz de lubricación</b><small>Imagen PNG en alta resolución</small></span></button>
     <button type="button" class="btn btn-fantasma ancho" data-cerrar>Cancelar</button>
   </div>`);
   capa.querySelectorAll('[data-desc]').forEach((b) => b.addEventListener('click', async () => {
     if (capa.querySelector('[data-ocupado]')) return;
-    b.setAttribute('aria-busy', 'true');
-    b.setAttribute('data-ocupado', '');
-    const small = b.querySelector('small'), antes = small.textContent;
-    small.textContent = 'Generando imagen…';
+    const caja = b.closest('.opcion') || b;
+    caja.setAttribute('aria-busy', 'true');
+    caja.setAttribute('data-ocupado', '');
+    const small = caja.querySelector('small'), antes = small.textContent;
+    small.textContent = 'Generando…';
     try {
       const nombre = nombreArchivo(eq.codigo ? `${eq.activo}_${eq.codigo}` : eq.activo);
-      if (b.dataset.desc === 'qr') {
+      const tipo = b.dataset.desc;
+      if (tipo === 'qr-unidad') {
+        const u = us.find((x) => x.equipo === $('#d-unidad').value);
+        descargarBlob(await etiquetaUnidad(eq, u), `QR_${nombreArchivo(u.equipo)}.png`);
+      } else if (tipo === 'qr-todos') {
+        const JSZip = await cargarJSZip();
+        const zip = new JSZip();
+        for (let i = 0; i < us.length; i++) {
+          small.textContent = `Generando ${i + 1} de ${us.length}…`;
+          zip.file(`QR_${nombreArchivo(us[i].equipo)}.png`, await etiquetaUnidad(eq, us[i]));
+        }
+        descargarBlob(await zip.generateAsync({ type: 'blob' }), `QR_equipos_${nombre}.zip`);
+      } else if (tipo === 'qr') {
         const blob = await etiquetaQR({
           titulo: eq.activo, eyebrow: 'Matriz de cambio de aceite',
           detalle: eq.codigo ? `Código ${eq.codigo}` : (eq.lugar || lugarGeneral()),
@@ -418,16 +623,16 @@ function hojaDescarga(eq) {
         });
         descargarBlob(blob, `QR_${nombre}.png`);
       } else {
-        const blob = await imagenMatriz({ equipo: eq, lubricantes: lubricantesDe(eq), url: urlEquipo(eq.id), logoBlanco: LOGO_BLANCO, src });
+        const blob = await imagenMatriz({ equipo: eq, lubricantes: lubricantesDe(eq), url: unidad ? urlUnidad(unidad) : urlEquipo(eq.id), logoBlanco: LOGO_BLANCO, src, lis: lisSrc, unidades: us });
         descargarBlob(blob, `Matriz_${nombre}.png`);
       }
       cerrarCapa(false);
-      toast('Imagen descargada');
+      toast(tipo === 'qr-todos' ? 'ZIP descargado' : 'Imagen descargada');
     } catch (e) {
       console.error(e);
       small.textContent = antes;
-      b.removeAttribute('aria-busy'); b.removeAttribute('data-ocupado');
-      toast('No se pudo generar la imagen. Intente de nuevo.', 'error');
+      caja.removeAttribute('aria-busy'); caja.removeAttribute('data-ocupado');
+      toast('No se pudo generar la descarga. Intente de nuevo.', 'error');
     }
   }));
 }
@@ -520,7 +725,7 @@ const puntoVacio = () => ({ componente: '', codigoLIS: '', lubricante: '', canti
 function equipoNuevo() {
   const t = plantilla();
   return {
-    id: '', activo: '', codigo: '', lugar: t.lugar || '', fechaElaboracion: hoyISO(), actualizado: null, imagen: '',
+    id: '', activo: '', codigo: '', lugar: t.lugar || '', fechaElaboracion: hoyISO(), actualizado: null, imagen: '', foto: '', unidades: [],
     puntos: [puntoVacio()], fichas: [], advertencia: t.advertencia || '', primerosAuxilios: clonar(t.primerosAuxilios || {}),
     incendios: t.incendios || '', departamento: t.departamento || 'Departamento de Tribología',
   };
@@ -573,6 +778,15 @@ function vistaEditor(id) {
       <div id="ed-img"></div>
     </fieldset>
 
+    <fieldset class="ed-seccion"><legend>Foto del equipo (pantalla de inicio)</legend>
+      <div id="ed-foto"></div>
+    </fieldset>
+
+    <fieldset class="ed-seccion"><legend>Equipos que usan esta matriz (IH08)</legend>
+      <p class="ayuda">Marque los equipos de la lista IH08 que usan esta matriz. Cada equipo tiene su propio QR y pertenece a una sola matriz: si marca uno que está en otra matriz, al guardar se mueve a esta y su QR abrirá esta matriz.</p>
+      <div id="ed-unidades"></div>
+    </fieldset>
+
     <fieldset class="ed-seccion"><legend>Puntos de cambio de aceite</legend>
       <div id="ed-puntos"></div>
       <button type="button" class="btn btn-sec ancho" data-accion="agregar-punto" style="margin-bottom:16px">${I('mas')} Agregar punto</button>
@@ -612,7 +826,10 @@ function vistaEditor(id) {
     </div></div>
   </form>`;
   b.fichas = b.fichas || [];
+  b.unidades = b.unidades || [];
   pintarImagenEditor();
+  pintarFotoEditor();
+  pintarUnidadesEditor();
   pintarPuntosEditor();
   pintarLubsEditor();
   pintarFichasEditor();
@@ -629,6 +846,8 @@ function vistaEditor(id) {
       b.puntos[i][t.dataset.k] = t.value;
       t.closest('.campo')?.classList.remove('invalido');
       if (t.dataset.k === 'componente') t.closest('.ed-punto').querySelector('.ed-punto-cab b').textContent = t.value || `Punto ${i + 1}`;
+    } else if (t.id === 'u-buscar') {
+      pintarUnidadesEditor();
     } else if (t.dataset.fk) {
       b.fichas[+t.closest('[data-f]').dataset.f][t.dataset.fk] = t.value;
       t.closest('.campo')?.classList.remove('invalido');
@@ -637,6 +856,12 @@ function vistaEditor(id) {
   f.addEventListener('change', (e) => {
     if (e.target.dataset.k === 'lubricante') pintarLubsEditor();
     if (e.target.matches('input[type=file]')) cargarImagenEditor(e.target);
+    if (e.target.dataset.unidad) {
+      const c = e.target.dataset.unidad, set = new Set(b.unidades);
+      if (e.target.checked) set.add(c); else set.delete(c);
+      b.unidades = [...set].sort((x, y) => x.localeCompare(y, 'es', { numeric: true }));
+      pintarUnidadesEditor();
+    }
   });
   const copiar = $('#copiar-de');
   if (copiar) copiar.addEventListener('change', () => {
@@ -680,6 +905,39 @@ function pintarPuntosEditor() {
     </div>`).join('');
 }
 
+function pintarFotoEditor() {
+  const b = estado.editor.borrador;
+  $('#ed-foto').innerHTML = `
+    <div class="ed-lub" style="border:0">
+      <span class="miniatura foto" style="width:96px;height:96px">${b.foto ? `<img src="${esc(src(b.foto))}" alt="Foto actual">` : I('equipo')}</span>
+      <div><b>${b.foto ? 'Foto actual' : 'Sin foto'}</b><small>Se muestra en la tarjeta del equipo en el inicio. Si no hay foto se usa la imagen de puntos.</small></div>
+    </div>
+    <div class="fila-botones">
+      <label class="btn btn-sec">${I('imagen')} ${b.foto ? 'Cambiar foto' : 'Subir foto'}<input type="file" accept="image/*" data-img="foto" class="visual-oculto"></label>
+      ${b.foto ? `<button type="button" class="btn btn-peligro" data-accion="quitar-foto">${I('basura')} Quitar</button>` : ''}
+    </div>`;
+}
+
+function pintarUnidadesEditor() {
+  const b = estado.editor.borrador, caja = $('#ed-unidades');
+  if (!$('#u-buscar', caja)) {
+    caja.innerHTML = `<p class="ayuda" id="u-cuenta"></p>
+      <div class="filtro-buscar" style="padding:0 0 8px">${I('buscar', 'i-peq')}<input id="u-buscar" type="search" placeholder="Buscar por código, modelo, flota o descripción" autocomplete="off"></div>
+      <ul class="filtro-opciones u-lista" id="u-lista"></ul>`;
+  }
+  const sel = new Set(b.unidades);
+  const qn = sinAcentos($('#u-buscar').value).toLowerCase();
+  const otras = new Map();
+  estado.datos.equipos.forEach((e) => { if (e.id !== b.id) (e.unidades || []).forEach((c) => { if (!otras.has(c)) otras.set(c, e.activo); }); });
+  const lista = (estado.datos.ih08 || []).filter((u) => !qn || sinAcentos(`${u.equipo} ${u.modelo} ${u.flota} ${u.descripcion}`).toLowerCase().includes(qn))
+    .sort((x, y) => (sel.has(y.equipo) - sel.has(x.equipo)) || x.equipo.localeCompare(y.equipo, 'es', { numeric: true }));
+  $('#u-cuenta').innerHTML = `<b>${sel.size}</b> equipo${sel.size === 1 ? '' : 's'} seleccionado${sel.size === 1 ? '' : 's'}${sel.size ? `: ${esc([...sel].join(', '))}` : ''}`;
+  $('#u-lista').innerHTML = lista.slice(0, 250).map((u) => `<li><label class="opcion-f">
+      <input type="checkbox" data-unidad="${esc(u.equipo)}" ${sel.has(u.equipo) ? 'checked' : ''}>
+      <span>${esc(u.equipo)} <small>${esc([u.modelo, u.flota].filter(Boolean).join(' · '))}</small></span>
+      <span class="cnt">${otras.has(u.equipo) ? `en ${esc(otras.get(u.equipo))}` : ''}</span></label></li>`).join('') || '<li class="filtro-vacio">Sin coincidencias</li>';
+}
+
 function pintarFichasEditor() {
   const f = estado.editor.borrador.fichas;
   $('#ed-fichas').innerHTML = f.length ? f.map((x, i) => `
@@ -713,9 +971,15 @@ async function cargarImagenEditor(input) {
   const ed = estado.editor;
   try {
     toast('Procesando imagen…');
-    const r = await procesarImagen(file, input.dataset.img === 'lub' ? { maxLado: 900 } : {});
+    const r = await procesarImagen(file, input.dataset.img === 'lub' || input.dataset.img === 'foto' ? { maxLado: 900 } : {});
     const marca = Date.now().toString(36);
-    if (input.dataset.img === 'equipo') {
+    if (input.dataset.img === 'foto') {
+      const ruta = `img/fotos/${clave(ed.borrador.activo) || 'equipo'}-${marca}.jpg`;
+      ed.pendientes[ruta] = r;
+      estado.imagenesLocales[ruta] = r.url;
+      ed.borrador.foto = ruta;
+      pintarFotoEditor();
+    } else if (input.dataset.img === 'equipo') {
       const ruta = `img/equipos/${clave(ed.borrador.activo) || 'equipo'}-${marca}.jpg`;
       ed.pendientes[ruta] = r;
       estado.imagenesLocales[ruta] = r.url;
@@ -748,6 +1012,7 @@ function calcularCambios(ed) {
   if (!a) {
     out.push(`Creación de la matriz con ${b.puntos.length} punto${b.puntos.length === 1 ? '' : 's'}: ${b.puntos.map((p) => norm(p.componente) || '—').join(', ')}`);
     if (b.imagen) out.push('Imagen de puntos de lubricación agregada');
+    if ((b.unidades || []).length) out.push(`Equipos asociados: ${b.unidades.map((c) => { const o = estado.datos.equipos.find((e) => (e.unidades || []).includes(c)); return o ? `${c} (sale de ${o.activo})` : c; }).join(', ')}`);
   } else {
     Object.keys(ETQ).forEach((k) => { if (norm(a[k]) !== norm(b[k])) out.push(`${ETQ[k]}: ${fmt(a[k])} → ${fmt(b[k])}`); });
     if (norm(a.imagen) !== norm(b.imagen)) out.push(!b.imagen ? 'Imagen de puntos de lubricación eliminada' : a.imagen ? 'Imagen de puntos de lubricación reemplazada' : 'Imagen de puntos de lubricación agregada');
@@ -761,6 +1026,11 @@ function calcularCambios(ed) {
       });
     }
     Object.keys(ETQ_TXT).forEach((k) => { if (norm(a[k]) !== norm(b[k])) out.push(`${ETQ_TXT[k]}: texto modificado`); });
+    if (norm(a.foto) !== norm(b.foto)) out.push(!b.foto ? 'Foto del equipo eliminada' : a.foto ? 'Foto del equipo reemplazada' : 'Foto del equipo agregada');
+    const uA = new Set(a.unidades || []), uB = new Set(b.unidades || []);
+    const mas = [...uB].filter((x) => !uA.has(x)), menos = [...uA].filter((x) => !uB.has(x));
+    if (mas.length) out.push(`Equipos agregados: ${mas.map((c) => { const o = estado.datos.equipos.find((e) => e.id !== b.id && (e.unidades || []).includes(c)); return o ? `${c} (sale de ${o.activo})` : c; }).join(', ')}`);
+    if (menos.length) out.push(`Equipos retirados: ${menos.join(', ')}`);
     const fA = JSON.stringify((a.fichas || []).map((f) => [norm(f.nombre), norm(f.url)]));
     const fB = JSON.stringify((b.fichas || []).map((f) => [norm(f.nombre), norm(f.url)]));
     if (fA !== fB) out.push(`Fichas técnicas modificadas (${(a.fichas || []).length} → ${(b.fichas || []).length})`);
@@ -901,6 +1171,9 @@ async function guardarEnGitHub(ed, registro, progreso) {
       lubricantesDe(eq, remoto.lubricantes).forEach((l) => {
         if (!remoto.lubricantes[l.clave]) remoto.lubricantes[l.clave] = { nombre: l.nombre, imagen: (ed.lubs[l.clave] || {}).imagen || '' };
       });
+      // Cada equipo (IH08) queda en una sola matriz: se retira de las demás
+      const mias = new Set(eq.unidades || []);
+      remoto.equipos.forEach((o) => { if (o.id !== eq.id && o.unidades) o.unidades = o.unidades.filter((c) => !mias.has(c)); });
       remoto.equipos.sort((a, b) => a.activo.localeCompare(b.activo, 'es'));
       remoto.actualizado = ahora;
 
@@ -918,7 +1191,7 @@ async function guardarEnGitHub(ed, registro, progreso) {
       const histNuevo = { esquema: 1, registros: registros.length, cifrado: await cifrar(s.claveHistorial, JSON.stringify(registros)) };
 
       progreso('Guardando en GitHub…');
-      const usadas = new Set([eq.imagen, ...Object.values(remoto.lubricantes).map((l) => l.imagen)]);
+      const usadas = new Set([eq.imagen, eq.foto, ...Object.values(remoto.lubricantes).map((l) => l.imagen)]);
       const archivos = [
         { ruta: 'data/matrices.json', texto: `${JSON.stringify(remoto, null, 2)}\n` },
         { ruta: 'data/historial.json', texto: `${JSON.stringify(histNuevo, null, 2)}\n` },
@@ -979,11 +1252,12 @@ function descargarCSV() {
 
 /* ------------------------------------------------------- Eventos globales */
 document.addEventListener('click', async (e) => {
-  const a = e.target.closest('a[data-nav], a[data-ir], a[data-editar], a[data-volver]');
+  const a = e.target.closest('a[data-nav], a[data-ir], a[data-editar], a[data-volver], a[data-unidad-ir]');
   if (a && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
     e.preventDefault();
     if (a.dataset.nav === 'inicio') return ir({ vista: 'inicio' });
     if (a.dataset.ir) return ir({ vista: 'matriz', id: a.dataset.ir });
+    if (a.dataset.unidadIr) return ir({ vista: 'unidad', codigo: a.dataset.unidadIr, id: a.dataset.eq || '' });
     if (a.dataset.editar) return ir({ vista: 'editar', id: a.dataset.editar });
     if (a.dataset.volver) return ir(JSON.parse(a.dataset.volver));
   }
@@ -1002,7 +1276,7 @@ document.addEventListener('click', async (e) => {
     case 'csv': return descargarCSV();
     case 'descargar': {
       const eq = estado.datos.equipos.find((x) => x.id === rutaActual.id);
-      if (eq) hojaDescarga(eq);
+      if (eq) hojaDescarga(eq, rutaActual.vista === 'unidad' ? rutaActual.codigo : '');
       return;
     }
     case 'qr-inicio': {
@@ -1043,6 +1317,7 @@ document.addEventListener('click', async (e) => {
     }
     case 'agregar-ficha': ed.borrador.fichas.push({ nombre: '', url: '' }); pintarFichasEditor(); $(`[data-f="${ed.borrador.fichas.length - 1}"] input`).focus(); return;
     case 'borrar-ficha': ed.borrador.fichas.splice(+b.closest('[data-f]').dataset.f, 1); pintarFichasEditor(); return;
+    case 'quitar-foto': ed.borrador.foto = ''; pintarFotoEditor(); return;
     case 'quitar-img': ed.borrador.imagen = ''; pintarImagenEditor(); return;
     case 'quitar-img-lub': {
       const k = b.dataset.clave;
@@ -1052,6 +1327,12 @@ document.addEventListener('click', async (e) => {
     }
     default:
   }
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target.closest('#filtros')) return;
+  $$('#filtros .filtro-panel:not([hidden])').forEach((p) => { p.hidden = true; p.closest('.filtro').querySelector('.filtro-btn').setAttribute('aria-expanded', 'false'); });
+  document.body.classList.remove('filtro-abierto');
 });
 
 window.addEventListener('beforeunload', (e) => {

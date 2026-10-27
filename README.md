@@ -6,6 +6,8 @@ Página web (GitHub Pages) con la **matriz de cambio de aceite** de cada equipo.
 - **Editar matriz** y **Nueva matriz** piden la contraseña de edición (`MATRIZEQUIPOS26`).
 - Antes de guardar, el editor debe escribir su **nombre** y su **documento de identificación**. La página agrega sola la **fecha**, la **matriz** y la lista de **cambios realizados**.
 - El historial se guarda **cifrado** en el repositorio. Solo se puede ver dentro de la página (botón *Historial*, con la contraseña) y se puede descargar en CSV para Excel.
+- **Cada equipo tiene su propio QR** (por ejemplo `?u=DL001`). El QR abre la matriz asignada a ese equipo. Si después se le asigna otra matriz (porque lleva lubricantes distintos), el QR ya impreso abre la nueva.
+- El inicio tiene buscador general y filtros por **flota, modelo y equipo** (tomados del IH08), con selección múltiple, buscador y borrador de filtros.
 - Cada matriz tiene un botón **Descargar** con dos opciones: la etiqueta del **código QR** (PNG de 1500 px, lista para imprimir) o la **matriz completa** (PNG de 2400 px).
 - Editar una matriz **no cambia su QR**: el QR apunta a un identificador fijo (`?eq=cat-montacarga`), no al nombre del equipo.
 - Si un celular ya abrió la página una vez, puede volver a abrirla aunque se quede sin señal.
@@ -21,11 +23,14 @@ Página web (GitHub Pages) con la **matriz de cambio de aceite** de cada equipo.
 4. Seleccione **Public**. El plan gratuito de GitHub Pages lo exige; vea la nota de privacidad al final.
 5. Haga clic en **Create repository**.
 
-### 2. Subir los archivos
-1. Descomprima el ZIP en su computador.
-2. En el repositorio vacío, haga clic en **uploading an existing file**.
-3. Arrastre **todo el contenido** de la carpeta `matrices-lubricacion`: los archivos y las carpetas `css`, `data`, `fonts`, `img`, `js`. Arrastre lo que hay *dentro* de la carpeta, no la carpeta misma.
-4. Haga clic en **Commit changes**.
+### 2. Subir los archivos (en 3 partes)
+GitHub acepta máximo 100 archivos por subida, por eso la página viene en tres ZIP: `parte1`, `parte2` y `parte3`.
+1. Descomprima los tres ZIP en su computador.
+2. **Parte 1:** en el repositorio vacío haga clic en **uploading an existing file**. Abra la carpeta `matrices-lubricacion-parte1`, seleccione **todo su contenido** (Ctrl+A) y arrástrelo a GitHub. Haga clic en **Commit changes**.
+3. **Parte 2:** en el repositorio, **Add file → Upload files**. Abra `matrices-lubricacion-parte2` y arrastre la carpeta `img` que hay dentro. Haga clic en **Commit changes**.
+4. **Parte 3:** igual que la parte 2, con la carpeta `img` de `matrices-lubricacion-parte3`.
+
+GitHub une las carpetas `img` de las tres partes. Al final, en la página principal del repositorio deben verse `index.html` y las carpetas `css`, `data`, `fonts`, `img` y `js`.
 
 > El archivo `.nojekyll` es oculto en algunos computadores. Si no se sube, no pasa nada.
 
@@ -56,7 +61,7 @@ El token queda guardado **cifrado con la contraseña**: aunque alguien vea los a
 
 ### 6. Completar y etiquetar los equipos
 1. En el inicio, use **Editar matriz** para completar los datos que en el Excel estaban vacíos, como el intervalo de cambio o la cantidad (aparecen como *Por definir*).
-2. Abra cada matriz, haga clic en **Descargar → Código QR del equipo**, imprima la etiqueta y péguela en el equipo.
+2. Abra cada matriz y haga clic en **Descargar → QR de todos los equipos**. Se descarga un ZIP con una etiqueta por equipo: imprímalas y pegue cada una en su equipo.
 3. Descargue el QR de la página de inicio (está al final del inicio) para carteleras o el taller.
 
 ---
