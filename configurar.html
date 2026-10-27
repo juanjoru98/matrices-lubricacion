@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Configurar guardado · Matrices de lubricación</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F47A1F">
+<link rel="icon" type="image/png" href="img/icono-192.png">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .pasos { margin: 12px 0 0; padding-left: 20px; color: var(--tinta-2); }
+  .pasos li { margin: 6px 0; }
+  .resultado { margin-top: 16px; }
+  .ok-caja { padding: 14px; border-radius: var(--radio-peq); background: var(--verde-fondo); color: var(--verde-tinta); font-weight: 600; }
+  pre { white-space: pre-wrap; word-break: break-all; font-size: 12px; background: var(--superficie-2); border: 1px solid var(--linea); padding: 12px; border-radius: 10px; }
+</style>
+</head>
+<body>
+<header class="banda"><div class="contenedor banda-in"><a class="banda-logo" href="./" aria-label="Ir al inicio"><img src="img/logo-blanco.png" alt="Zijin · Continental Gold" width="342" height="47"></a></div></header>
+<main class="contenedor vista-admin" style="max-width:760px">
+  <p class="eyebrow">Configuración (solo administrador)</p>
+  <h1>Activar el guardado en línea</h1>
+  <p class="lead">Con esto, los botones Editar y Nueva matriz guardan los cambios directamente en el repositorio de GitHub. Se hace una sola vez (y cuando el token venza).</p>
+  <ol class="pasos">
+    <li>Cree un token en GitHub siguiendo el paso 4 de la guía (permiso <b>Contents: Read and write</b> solo sobre este repositorio).</li>
+    <li>Péguelo abajo junto con la contraseña de edición y pulse <b>Probar y guardar</b>.</li>
+    <li>El token queda cifrado con la contraseña: nadie puede usarlo sin conocerla.</li>
+  </ol>
+
+  <form id="f" novalidate>
+    <fieldset class="ed-seccion"><legend>Repositorio</legend>
+      <div class="rejilla rejilla-2">
+        <label class="campo"><span>Usuario u organización de GitHub</span><input id="owner" autocomplete="off" spellcheck="false" required></label>
+        <label class="campo"><span>Nombre del repositorio</span><input id="name" autocomplete="off" spellcheck="false" required></label>
+        <label class="campo"><span>Rama</span><input id="branch" autocomplete="off" spellcheck="false" value="main"></label>
+        <label class="campo"><span>Dirección pública (opcional)</span><input id="urlPublica" autocomplete="off" spellcheck="false" placeholder="Se usa la dirección actual"><small>Solo si usa un dominio propio. Los QR apuntan a esta dirección.</small></label>
+      </div>
+    </fieldset>
+    <fieldset class="ed-seccion"><legend>Acceso</legend>
+      <label class="campo"><span>Token de GitHub <span class="req">*</span></span><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required></label>
+      <label class="campo"><span>Contraseña de edición <span class="req">*</span></span><input id="clave" type="password" autocomplete="new-password" required><small>La que usarán los editores (por defecto, la acordada para el proyecto).</small></label>
+      <label class="campo" id="campo-actual" hidden><span>Contraseña actual <span class="req">*</span></span><input id="actual" type="password" autocomplete="current-password"><small>La contraseña nueva es distinta a la actual. Escriba la actual para autorizar el cambio; el historial se vuelve a cifrar con la nueva.</small></label>
+    </fieldset>
+    <p class="error" id="err" hidden></p>
+    <div id="prog"></div>
+    <div class="d-acciones"><a class="btn btn-fantasma" href="./">Volver al inicio</a><button class="btn btn-primario" id="ok" type="submit">Probar y guardar</button></div>
+    <div id="res" class="resultado"></div>
+  </form>
+</main>
+<script type="module">
+import { derivarMaestra, verificador, claveAES, cifrar, descifrar, nuevaSalt } from './js/cripto.js';
+import { Repo, datosRepo } from './js/github.js';
+
+const $ = (s) => document.querySelector(s);
+const cfg = await (await fetch('data/config.json', { cache: 'no-store' })).json();
+const r0 = datosRepo(cfg);
+$('#owner').value = r0.owner || '';
+$('#name').value = r0.name || '';
+$('#branch').value = r0.branch || 'main';
+$('#urlPublica').value = cfg.urlPublica || '';
+
+const err = (t) => { $('#err').textContent = t; $('#err').hidden = !t; };
+const prog = (t) => { $('#prog').innerHTML = t ? `<p class="progreso"><span class="giro" aria-hidden="true"></span>${t}</p>` : ''; };
+
+$('#f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  err(''); $('#res').innerHTML = '';
+  const owner = $('#owner').value.trim(), name = $('#name').value.trim(), branch = $('#branch').value.trim() || 'main';
+  const token = $('#token').value.trim(), clave = $('#clave').value.trim(), actual = $('#actual').value.trim();
+  if (!owner || !name || !token || !clave) return err('Complete el repositorio, el token y la contraseña.');
+  if (clave.length < 8) return err('Use una contraseña de al menos 8 caracteres.');
+  const btn = $('#ok'); btn.disabled = true;
+  let nuevoCfg;
+  try {
+    prog('Verificando la contraseña…');
+    const seg = cfg.seguridad;
+    let maestra = await derivarMaestra(clave, seg.salt, seg.iteraciones);
+    let seguridad = seg, histTexto = null;
+    const repo = new Repo({ owner, name, branch, token });
+
+    if ((await verificador(maestra)) !== seg.verificador) {
+      // Cambio de contraseña: exige la actual y vuelve a cifrar el historial
+      if (!actual) { $('#campo-actual').hidden = false; $('#actual').focus(); throw new Error('La contraseña no coincide con la actual. Para cambiarla, escriba también la contraseña actual.'); }
+      const vieja = await derivarMaestra(actual, seg.salt, seg.iteraciones);
+      if ((await verificador(vieja)) !== seg.verificador) throw new Error('La contraseña actual no es correcta.');
+      prog('Probando el token…');
+      await probarToken(repo);
+      prog('Volviendo a cifrar el historial con la nueva contraseña…');
+      const h = JSON.parse((await repo.leerTexto('data/historial.json')) || '{"esquema":1,"cifrado":null}');
+      let regs = [];
+      if (h.cifrado) regs = JSON.parse(await descifrar(await claveAES(vieja, 'historial'), h.cifrado));
+      seguridad = { salt: nuevaSalt(), iteraciones: seg.iteraciones };
+      maestra = await derivarMaestra(clave, seguridad.salt, seguridad.iteraciones);
+      seguridad.verificador = await verificador(maestra);
+      histTexto = JSON.stringify({ esquema: 1, registros: regs.length, cifrado: regs.length ? await cifrar(await claveAES(maestra, 'historial'), JSON.stringify(regs)) : null }, null, 2) + '\n';
+    } else {
+      prog('Probando el token…');
+      await probarToken(repo);
+    }
+
+    prog('Cifrando el token…');
+    nuevoCfg = {
+      repo: { owner, name, branch },
+      urlPublica: $('#urlPublica').value.trim(),
+      seguridad,
+      tokenCifrado: await cifrar(await claveAES(maestra, 'token'), token),
+    };
+    prog('Guardando la configuración en el repositorio…');
+    const archivos = [{ ruta: 'data/config.json', texto: JSON.stringify(nuevoCfg, null, 2) + '\n' }];
+    if (histTexto) archivos.push({ ruta: 'data/historial.json', texto: histTexto });
+    await repo.commit(archivos, histTexto ? 'Configura guardado en línea y cambia la contraseña de edición' : 'Configura guardado en línea');
+    prog('');
+    $('#res').innerHTML = `<div class="ok-caja">Listo. En 1 a 2 minutos los botones Editar y Nueva matriz guardarán directamente en GitHub.${histTexto ? ' La contraseña de edición cambió: comuníquela a los editores.' : ''}</div>`;
+    $('#token').value = ''; $('#actual').value = '';
+  } catch (x) {
+    prog('');
+    err(x.message || String(x));
+    if (nuevoCfg) {
+      $('#res').innerHTML = `<details><summary>Guardar manualmente</summary><p class="ayuda">Si no se pudo guardar automáticamente, reemplace el contenido de <code>data/config.json</code> en GitHub por:</p><pre>${JSON.stringify(nuevoCfg, null, 2).replace(/</g, '&lt;')}</pre></details>`;
+    }
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function probarToken(repo) {
+  const info = await repo.info();
+  if (info.permissions && info.permissions.push === false) throw new Error('El token puede leer el repositorio pero no escribir. Dé el permiso Contents: Read and write.');
+}
+</script>
+</body>
+</html>
