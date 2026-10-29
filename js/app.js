@@ -93,7 +93,7 @@ function dato(v, unidad = '') {
 /* ------------------------------------------------------------- Navegación */
 function leerRuta() {
   const p = new URLSearchParams(location.search);
-  if (p.get('u')) return { vista: 'unidad', codigo: p.get('u'), id: p.get('eq') || '' };
+  if (p.get('u')) return { vista: 'unidad', codigo: p.get('u') };
   if (p.get('eq')) return { vista: 'matriz', id: p.get('eq') };
   const panel = p.get('panel');
   if (panel === 'editar') return { vista: 'editar', id: p.get('id') || '' };
@@ -102,7 +102,7 @@ function leerRuta() {
 }
 function rutaURL(r) {
   const base = location.pathname;
-  if (r.vista === 'unidad') return `${base}?u=${encodeURIComponent(r.codigo)}${r.id ? `&eq=${encodeURIComponent(r.id)}` : ''}`;
+  if (r.vista === 'unidad') return `${base}?u=${encodeURIComponent(r.codigo)}`;
   if (r.vista === 'matriz') return `${base}?eq=${encodeURIComponent(r.id)}`;
   if (r.vista === 'editar') return `${base}?panel=editar${r.id ? `&id=${encodeURIComponent(r.id)}` : ''}`;
   if (r.vista === 'nueva' || r.vista === 'historial') return `${base}?panel=${r.vista}`;
@@ -148,7 +148,7 @@ async function render(r) {
     return vistaSelector();
   }
   if (r.vista === 'unidad') return vistaUnidad(r);
-  if (r.vista === 'matriz') return vistaMatriz(r.id);
+  if (r.vista === 'matriz') return vistaMatrizOPlantilla(r.id);
   return vistaInicio();
 }
 
@@ -208,6 +208,7 @@ function pie(texto) {
 const FILTROS = [['flota', 'Flota'], ['modelo', 'Modelo'], ['equipo', 'Equipo']];
 estado.filtros = { flota: new Set(), modelo: new Set(), equipo: new Set() };
 estado.q = '';
+estado.abiertos = new Set();
 
 function mapaIH08() {
   if (estado._ihDe !== estado.datos) {
@@ -216,15 +217,14 @@ function mapaIH08() {
   }
   return estado._ih;
 }
-function unidadesDe(eq) {
-  const m = mapaIH08();
-  return (eq.unidades || []).map((c) => m.get(c) || { equipo: c, modelo: '', flota: '', descripcion: '' });
-}
 const unicos = (xs) => [...new Set(xs.filter(Boolean))];
+const buscarEquipo = (id) => estado.datos.equipos.find((e) => e.id === id) || estado.datos.equipos.find((e) => e.id.toUpperCase() === String(id || '').toUpperCase());
+const delModelo = (modelo) => estado.datos.equipos.filter((e) => e.modelo === modelo).sort((x, y) => x.equipo.localeCompare(y.equipo, 'es', { numeric: true }));
+const firma = (e) => JSON.stringify([e.puntos, e.fichas || [], e.imagen || '']);
+
 function textoBusqueda(eq) {
-  return sinAcentos([eq.activo, eq.codigo, eq.lugar,
-    ...(eq.puntos || []).flatMap((p) => [p.componente, p.lubricante, p.codigoLIS]),
-    ...unidadesDe(eq).flatMap((u) => [u.equipo, u.modelo, u.flota, u.descripcion])].join(' ')).toLowerCase();
+  return sinAcentos([eq.equipo, eq.descripcion, eq.modelo, eq.flota, eq.activo,
+    ...(eq.puntos || []).flatMap((p) => [p.componente, p.lubricante, p.codigoLIS])].join(' ')).toLowerCase();
 }
 function resaltar(texto, terminos) {
   let h = esc(texto);
@@ -247,56 +247,77 @@ function resaltar(texto, terminos) {
 }
 
 const hayFiltros = () => FILTROS.some(([f]) => estado.filtros[f].size);
-function unidadPasa(u, excepto = '') {
-  return FILTROS.every(([f]) => f === excepto || !estado.filtros[f].size || estado.filtros[f].has(u[f]));
-}
-
-function tarjetaEquipo(eq, terminos, accion = 'ver') {
-  const n = (eq.puntos || []).length;
-  const us = unidadesDe(eq);
-  const flotas = unicos(us.map((u) => u.flota)).join(' · ');
-  const modelos = unicos(us.map((u) => u.modelo));
-  const coincid = accion === 'ver' && hayFiltros() ? us.filter((u) => unidadPasa(u)).map((u) => u.equipo) : [];
-  const foto = eq.foto || eq.imagen;
-  const href = accion === 'ver' ? `?eq=${encodeURIComponent(eq.id)}` : `?panel=editar&id=${encodeURIComponent(eq.id)}`;
-  return `<li><a class="tarjeta-equipo" href="${href}" data-${accion === 'ver' ? 'ir' : 'editar'}="${esc(eq.id)}">
-    <span class="miniatura foto">${foto ? `<img src="${esc(src(foto))}" alt="" loading="lazy">` : I('equipo')}</span>
-    <span class="te-cuerpo">
-      <span class="te-nombre">${resaltar(eq.activo, terminos)}</span>
-      <span class="te-meta">${flotas ? `${resaltar(flotas, terminos)} · ` : ''}${modelos.length ? `${resaltar(modelos.slice(0, 2).join(', '), terminos)}${modelos.length > 2 ? '…' : ''} · ` : ''}${n} punto${n === 1 ? '' : 's'}</span>
-      <span class="te-comp">${coincid.length
-        ? `Equipo${coincid.length === 1 ? '' : 's'}: ${resaltar(coincid.join(', '), terminos)}`
-        : us.length ? `${us.length} equipo${us.length === 1 ? '' : 's'}: ${resaltar(us.map((u) => u.equipo).join(', '), terminos)}` : 'Sin equipos asociados'}</span>
-    </span>${I('der')}</a></li>`;
+function pasaFiltros(e, excepto = '') {
+  return FILTROS.every(([f]) => f === excepto || !estado.filtros[f].size || estado.filtros[f].has(e[f]));
 }
 
 function listaFiltrada(q, usarFiltros = true) {
   const terminos = sinAcentos(q).toLowerCase().split(/\s+/).filter(Boolean);
-  const eqs = [...estado.datos.equipos].sort((a, b) => a.activo.localeCompare(b.activo, 'es'));
-  return {
-    terminos,
-    lista: eqs.filter((e) => {
-      const t = textoBusqueda(e);
-      if (!terminos.every((x) => t.includes(x))) return false;
-      return !usarFiltros || !hayFiltros() || unidadesDe(e).some((u) => unidadPasa(u));
-    }),
-  };
+  const lista = estado.datos.equipos.filter((e) => {
+    const t = textoBusqueda(e);
+    if (!terminos.every((x) => t.includes(x))) return false;
+    return !usarFiltros || pasaFiltros(e);
+  });
+  return { terminos, lista };
+}
+
+/** Agrupa las matrices de equipo por modelo (IH08). */
+function agrupar(lista) {
+  const m = new Map();
+  lista.forEach((e) => { const k = e.modelo || 'Sin modelo'; if (!m.has(k)) m.set(k, []); m.get(k).push(e); });
+  return [...m.entries()].map(([modelo, eqs]) => ({ modelo, eqs: eqs.sort((x, y) => x.equipo.localeCompare(y.equipo, 'es', { numeric: true })) }))
+    .sort((x, y) => x.modelo.localeCompare(y.modelo, 'es', { numeric: true }));
+}
+
+function tarjetaGrupo(g, terminos, accion, abierto) {
+  const todos = delModelo(g.modelo);
+  const cuenta = new Map();
+  todos.forEach((e) => { const f = firma(e); cuenta.set(f, (cuenta.get(f) || 0) + 1); });
+  const comun = [...cuenta.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const conFoto = todos.find((e) => e.foto) || todos.find((e) => e.imagen);
+  const foto = conFoto ? (conFoto.foto || conFoto.imagen) : '';
+  const flotas = unicos(todos.map((e) => e.flota)).join(' · ');
+  const nombres = unicos(todos.map((e) => e.activo));
+  const idp = `g-${clave(g.modelo)}`;
+  const parcial = g.eqs.length < todos.length;
+  return `<li class="grupo ${abierto ? 'abierto' : ''}" data-modelo="${esc(g.modelo)}">
+    <button type="button" class="grupo-cab" aria-expanded="${abierto}" aria-controls="${idp}">
+      <span class="miniatura foto">${foto ? `<img src="${esc(src(foto))}" alt="" loading="lazy">` : I('equipo')}</span>
+      <span class="te-cuerpo">
+        <span class="te-nombre">${resaltar(g.modelo, terminos)}</span>
+        <span class="te-meta">${flotas ? `${resaltar(flotas, terminos)} · ` : ''}${parcial ? `${g.eqs.length} de ${todos.length}` : todos.length} equipo${todos.length === 1 ? '' : 's'}</span>
+        <span class="te-comp">${resaltar(nombres.join(' · '), terminos)}</span>
+      </span>
+      <span class="grupo-flecha">${I('abajo')}</span>
+    </button>
+    <div class="grupo-cuerpo" id="${idp}" ${abierto ? '' : 'hidden'}>
+      <ul class="grupo-unidades">${g.eqs.map((e) => {
+        const href = accion === 'ver' ? `?u=${encodeURIComponent(e.id)}` : `?panel=editar&id=${encodeURIComponent(e.id)}`;
+        const data = accion === 'ver' ? `data-unidad-ir="${esc(e.id)}"` : `data-editar="${esc(e.id)}"`;
+        return `<li><a href="${href}" ${data}>
+          <b>${resaltar(e.equipo, terminos)}</b>
+          <span>${resaltar(e.descripcion || e.activo || '', terminos)}</span>
+          ${comun && firma(e) !== comun && todos.length > 1 ? '<em class="propia">Matriz propia</em>' : ''}
+          ${I('der', 'i-peq')}</a></li>`;
+      }).join('')}</ul>
+      ${accion === 'ver' && g.eqs.length > 1 ? `<button type="button" class="btn btn-fantasma btn-peq" data-accion="qr-modelo" data-modelo="${esc(g.modelo)}">${I('qr', 'i-peq')} Descargar QR de ${g.eqs.length} equipos (ZIP)</button>` : ''}
+    </div>
+  </li>`;
 }
 
 /** Opciones de un filtro según los demás filtros activos (filtros encadenados). */
 function opcionesFiltro(f) {
-  const cuenta = new Map(), vistos = new Set();
-  estado.datos.equipos.forEach((eq) => unidadesDe(eq).forEach((u) => {
-    if (vistos.has(u.equipo) || !unidadPasa(u, f)) return;
-    vistos.add(u.equipo);
-    const v = u[f];
+  const cuenta = new Map();
+  estado.datos.equipos.forEach((e) => {
+    if (!pasaFiltros(e, f)) return;
+    const v = e[f];
     if (!v) return;
     cuenta.set(v, (cuenta.get(v) || 0) + 1);
-  }));
+  });
   estado.filtros[f].forEach((v) => { if (!cuenta.has(v)) cuenta.set(v, 0); });
-  const m = mapaIH08();
+  const m = new Map(estado.datos.equipos.map((e) => [e.equipo, e.modelo]));
   return [...cuenta.entries()].sort((a, b) => a[0].localeCompare(b[0], 'es', { numeric: true }))
-    .map(([v, n]) => ({ v, n, extra: f === 'equipo' ? (m.get(v) || {}).modelo || '' : '' }));
+    .map(([v, n]) => ({ v, n, extra: f === 'equipo' ? m.get(v) || '' : '' }));
 }
 
 function htmlFiltros() {
@@ -328,17 +349,20 @@ function montarBuscador(accion) {
       : '<li class="filtro-vacio">Sin coincidencias</li>';
   };
   const pintar = () => {
+    if (!document.body.contains(input)) return; // la vista ya cambió
     if (caja) estado.q = input.value;
     const { terminos, lista } = listaFiltrada(input.value, !!caja);
     limpiar.hidden = !input.value;
+    const grupos = agrupar(lista);
     const total = estado.datos.equipos.length;
     const activo = terminos.length || (caja && hayFiltros());
     $('#conteo').textContent = activo
-      ? `${lista.length} de ${total} matrices`
-      : `${total} matrices · ${(estado.datos.ih08 || []).length ? `${new Set(estado.datos.equipos.flatMap((e) => e.unidades || [])).size} equipos` : ''}`;
-    $('#lista').innerHTML = lista.length
-      ? lista.map((e) => tarjetaEquipo(e, terminos, accion)).join('')
-      : `<li class="sin-resultados">No hay matrices con esa búsqueda o filtros.<br>Pruebe con otro término o borre los filtros.</li>`;
+      ? `${lista.length} de ${total} equipos · ${grupos.length} modelo${grupos.length === 1 ? '' : 's'}`
+      : `${total} equipos en ${grupos.length} modelos`;
+    const abrirTodo = activo && grupos.length <= 4;
+    $('#lista').innerHTML = grupos.length
+      ? grupos.map((g) => tarjetaGrupo(g, terminos, accion, abrirTodo || estado.abiertos.has(g.modelo))).join('')
+      : `<li class="sin-resultados">No hay equipos con esa búsqueda o filtros.<br>Pruebe con otro término o borre los filtros.</li>`;
     if (caja) {
       FILTROS.forEach(([f]) => {
         const n = estado.filtros[f].size, b = $(`[data-filtro="${f}"] .filtro-n`, caja);
@@ -353,6 +377,16 @@ function montarBuscador(accion) {
   };
   input.addEventListener('input', debounce(pintar, 80));
   limpiar.addEventListener('click', () => { input.value = ''; pintar(); input.focus(); });
+  $('#lista').addEventListener('click', (e) => {
+    const cab = e.target.closest('.grupo-cab');
+    if (!cab) return;
+    const li = cab.closest('.grupo'), m = li.dataset.modelo;
+    const abrir = cab.getAttribute('aria-expanded') !== 'true';
+    cab.setAttribute('aria-expanded', String(abrir));
+    li.classList.toggle('abierto', abrir);
+    $('.grupo-cuerpo', li).hidden = !abrir;
+    if (abrir) estado.abiertos.add(m); else estado.abiertos.delete(m);
+  });
   if (caja) {
     const cerrar = (fd) => { $('.filtro-panel', fd).hidden = true; $('.filtro-btn', fd).setAttribute('aria-expanded', 'false'); document.body.classList.remove('filtro-abierto'); };
     const cerrarTodos = () => $$('.filtro', caja).forEach(cerrar);
@@ -408,12 +442,12 @@ function vistaInicio() {
     <p class="eyebrow">${esc(plantilla().departamento || 'Departamento de Tribología')}</p>
     <h1>Matrices de lubricación</h1>
     <p class="lead">Cambio de aceite por equipo · ${esc(lugarGeneral())}</p>
-    ${htmlBuscador('Buscar equipo, código, modelo, componente o lubricante')}
+    ${htmlBuscador('Buscar equipo, modelo, componente o lubricante')}
     ${htmlFiltros()}
   </section>
-  <section class="contenedor" aria-label="Matrices">
+  <section class="contenedor" aria-label="Equipos por modelo">
     <p class="conteo" id="conteo" aria-live="polite"></p>
-    <ul class="tarjetas" id="lista"></ul>
+    <ul class="tarjetas grupos" id="lista"></ul>
     <div class="qr-inicio">
       <div class="qr">${qrSVG(urlBase(), { titulo: 'Código QR de la página de inicio' })}</div>
       <div>
@@ -428,35 +462,34 @@ function vistaInicio() {
 }
 
 /* ------------------------------------------------------------------ Matriz */
-/** QR de un equipo (?u=DL001): abre la matriz que le corresponde. */
+/** QR de un equipo (?u=T001): abre exactamente la matriz de ese equipo. */
 function vistaUnidad(r) {
   const cod = String(r.codigo || '').trim();
-  const u = mapaIH08().get(cod) || { equipo: cod };
-  const ms = estado.datos.equipos.filter((e) => (e.unidades || []).includes(cod));
-  const elegida = ms.find((e) => e.id === r.id);
-  if (elegida || ms.length === 1) { rutaActual.id = (elegida || ms[0]).id; return vistaMatriz(rutaActual.id, cod); }
-  if (!ms.length) {
-    document.title = `Equipo ${cod}`;
-    app.innerHTML = `<div class="estado-vacio contenedor"><div class="d-icono">${I('qr')}</div>
-      <h1>${esc(cod)} no tiene matriz asignada</h1>
-      <p>${u.descripcion ? `${esc(u.descripcion)}. ` : ''}Este equipo aún no está asociado a ninguna matriz de cambio de aceite. Búsquelo desde el inicio o pida a un editor que lo asigne.</p>
-      <a class="btn btn-primario" href="./" data-nav="inicio">${I('buscar')} Ir al buscador</a></div>`;
-    return;
-  }
-  document.title = `Equipo ${cod} · Matrices`;
-  app.innerHTML = `<div class="barra"><div class="contenedor barra-in"><a class="btn btn-fantasma" href="./" data-nav="inicio">${I('izq')} Inicio</a></div></div>
-    <section class="contenedor vista-admin">
-      <p class="eyebrow">Equipo ${esc(cod)}${u.modelo ? ` · ${esc(u.modelo)}` : ''}${u.flota ? ` · ${esc(u.flota)}` : ''}</p>
-      <h1>Seleccione la matriz</h1>
-      <p class="lead">Este equipo tiene ${ms.length} matrices de cambio de aceite registradas.</p>
-      <ul class="tarjetas" style="margin-top:18px">${ms.map((e) => `<li><a class="tarjeta-equipo" href="?u=${encodeURIComponent(cod)}&eq=${encodeURIComponent(e.id)}" data-unidad-ir="${esc(cod)}" data-eq="${esc(e.id)}">
-        <span class="miniatura foto">${(e.foto || e.imagen) ? `<img src="${esc(src(e.foto || e.imagen))}" alt="">` : I('equipo')}</span>
-        <span class="te-cuerpo"><span class="te-nombre">${esc(e.activo)}</span><span class="te-meta">${e.puntos.length} puntos · elaborada ${esc(fechaCorta(e.fechaElaboracion))}</span></span>${I('der')}</a></li>`).join('')}</ul>
-    </section>${pie()}`;
+  const eq = buscarEquipo(cod);
+  if (eq) { rutaActual.id = eq.id; return vistaMatriz(eq.id); }
+  const u = mapaIH08().get(cod) || {};
+  document.title = `Equipo ${cod}`;
+  app.innerHTML = `<div class="estado-vacio contenedor"><div class="d-icono">${I('qr')}</div>
+    <h1>${esc(cod)} no tiene matriz</h1>
+    <p>${u.descripcion ? `${esc(u.descripcion)}. ` : ''}Este equipo aún no tiene matriz de cambio de aceite. Búsquelo desde el inicio o pida a un editor que la cree con «Nueva matriz».</p>
+    <a class="btn btn-primario" href="./" data-nav="inicio">${I('buscar')} Ir al buscador</a></div>`;
 }
 
-function vistaMatriz(id, unidad = '') {
-  const eq = estado.datos.equipos.find((e) => e.id === id);
+/** Enlaces antiguos ?eq=: si es una matriz por modelo (plantilla) muestra sus equipos. */
+function vistaMatrizOPlantilla(id) {
+  if (buscarEquipo(id)) return vistaMatriz(buscarEquipo(id).id);
+  const p = (estado.datos.plantillas || []).find((x) => x.id === id);
+  const eqs = p ? estado.datos.equipos.filter((e) => e.plantilla === id) : [];
+  if (!eqs.length) return vistaMatriz(id);
+  document.title = p.activo;
+  app.innerHTML = `<div class="barra"><div class="contenedor barra-in"><a class="btn btn-fantasma" href="./" data-nav="inicio">${I('izq')} Inicio</a></div></div>
+    <section class="contenedor vista-admin"><p class="eyebrow">${esc(p.activo)}</p><h1>Seleccione el equipo</h1>
+    <p class="lead">Cada equipo tiene su propia matriz.</p>
+    <ul class="tarjetas grupos" style="margin-top:18px">${agrupar(eqs).map((g) => tarjetaGrupo(g, [], 'ver', true)).join('')}</ul></section>${pie()}`;
+}
+
+function vistaMatriz(id) {
+  const eq = buscarEquipo(id);
   if (!eq) {
     document.title = 'Matriz no encontrada';
     app.innerHTML = `<div class="estado-vacio contenedor">
@@ -467,8 +500,9 @@ function vistaMatriz(id, unidad = '') {
     </div>`;
     return;
   }
-  document.title = `${unidad ? `${unidad} · ` : ''}${eq.activo} · Matriz de cambio de aceite`;
-  const uSel = unidad ? (mapaIH08().get(unidad) || { equipo: unidad }) : null;
+  rutaActual.id = eq.id;
+  document.title = `${eq.equipo} · Matriz de cambio de aceite`;
+  const hermanos = delModelo(eq.modelo).filter((x) => x.id !== eq.id);
   const lubs = lubricantesDe(eq);
   const pa = eq.primerosAuxilios || {};
   const filas = eq.puntos.map((p, i) => `
@@ -505,24 +539,24 @@ function vistaMatriz(id, unidad = '') {
     <header class="m-cabecera">
       <div>
         <p class="eyebrow">Matriz de cambio de aceite</p>
-        ${uSel ? `<p class="unidad-actual">${I('qr', 'i-peq')} Equipo <b>${esc(uSel.equipo)}</b>${uSel.descripcion ? ` <span>${esc(uSel.descripcion)}</span>` : ''}</p>` : ''}
-        <h1>${esc(eq.activo)}</h1>
+        <h1>${esc(eq.equipo)}</h1>
+        ${eq.descripcion ? `<p class="m-desc">${esc(eq.descripcion)}</p>` : ''}
         <div class="chips">
-          <span class="chip chip-marca">${eq.codigo ? `Código <b>${esc(eq.codigo)}</b>` : 'Sin código'}</span>
-          <span class="chip">${esc(eq.lugar || lugarGeneral())}</span>
+          ${eq.modelo ? `<span class="chip chip-marca">Modelo <b>${esc(eq.modelo)}</b></span>` : ''}
+          ${eq.flota ? `<span class="chip">Flota <b>${esc(eq.flota)}</b></span>` : ''}
           <span class="chip">${eq.puntos.length} punto${eq.puntos.length === 1 ? '' : 's'}</span>
-          ${unicos(unidadesDe(eq).map((u) => u.flota)).map((f) => `<span class="chip">Flota <b>${esc(f)}</b></span>`).join('')}
-          ${unicos(unidadesDe(eq).map((u) => u.modelo)).map((m) => `<span class="chip">Modelo <b>${esc(m)}</b></span>`).join('')}
+          <span class="chip">${esc(eq.lugar || lugarGeneral())}</span>
         </div>
-        ${unidadesDe(eq).length ? `<details class="unidades"><summary>Aplica a ${unidadesDe(eq).length} equipo${unidadesDe(eq).length === 1 ? '' : 's'}</summary>
-          <ul>${unidadesDe(eq).map((u) => `<li><a href="?u=${encodeURIComponent(u.equipo)}&eq=${encodeURIComponent(eq.id)}" data-unidad-ir="${esc(u.equipo)}" data-eq="${esc(eq.id)}" ${u.equipo === unidad ? 'aria-current="true"' : ''}><b>${esc(u.equipo)}</b><small>${esc([u.modelo, u.flota].filter(Boolean).join(' · '))}</small></a></li>`).join('')}</ul></details>` : ''}
+        ${eq.activo ? `<p class="m-base">Matriz: ${esc(eq.activo)}</p>` : ''}
+        ${hermanos.length ? `<details class="unidades"><summary>Otros equipos ${esc(eq.modelo)} (${hermanos.length})</summary>
+          <ul>${hermanos.map((u) => `<li><a href="?u=${encodeURIComponent(u.id)}" data-unidad-ir="${esc(u.id)}"><b>${esc(u.equipo)}</b><small>${esc(u.flota || '')}</small></a></li>`).join('')}</ul></details>` : ''}
         <dl class="m-fechas">
           <div><dt>Elaboración</dt><dd>${esc(fechaCorta(eq.fechaElaboracion) || '—')}</dd></div>
           <div><dt>Última actualización</dt><dd>${esc(eq.actualizado ? fechaCorta(eq.actualizado) : '—')}</dd></div>
         </dl>
       </div>
       <figure class="m-imagen">${eq.imagen
-        ? `<button type="button" data-accion="ampliar" data-src="${esc(src(eq.imagen))}" aria-label="Ampliar imagen de puntos de lubricación"><img src="${esc(src(eq.imagen))}" alt="Puntos de lubricación de ${esc(eq.activo)}"><span class="ampliar">${I('ampliar', 'i-peq')} Ampliar</span></button>`
+        ? `<button type="button" data-accion="ampliar" data-src="${esc(src(eq.imagen))}" aria-label="Ampliar imagen de puntos de lubricación"><img src="${esc(src(eq.imagen))}" alt="Puntos de lubricación de ${esc(eq.equipo)}"><span class="ampliar">${I('ampliar', 'i-peq')} Ampliar</span></button>`
         : `<div class="m-sin-imagen">${I('imagen')}<span>Imagen de puntos de lubricación pendiente</span></div>`}</figure>
     </header>
 
@@ -559,11 +593,11 @@ function vistaMatriz(id, unidad = '') {
   if (foto) { if (foto.complete && foto.naturalWidth) ajustar(); else foto.addEventListener('load', ajustar); }
 }
 
-function etiquetaUnidad(eq, u) {
+function etiquetaUnidad(eq) {
   return etiquetaQR({
-    titulo: u.equipo, eyebrow: 'Matriz de cambio de aceite',
-    detalle: [eq.activo, u.flota].filter(Boolean).join(' · '),
-    url: urlUnidad(u.equipo), pie: `${eq.departamento || 'Departamento de Tribología'} · ${eq.lugar || lugarGeneral()}`, logoBlanco: LOGO_BLANCO,
+    titulo: eq.equipo, eyebrow: 'Matriz de cambio de aceite',
+    detalle: [eq.modelo, eq.flota].filter(Boolean).join(' · ') || eq.activo,
+    url: urlUnidad(eq.id), pie: `${eq.departamento || 'Departamento de Tribología'} · ${eq.lugar || lugarGeneral()}`, logoBlanco: LOGO_BLANCO,
   });
 }
 function cargarJSZip() {
@@ -576,62 +610,46 @@ function cargarJSZip() {
     document.head.appendChild(sc);
   });
 }
+async function zipQR(eqs, nombre, avance = () => {}) {
+  const JSZip = await cargarJSZip();
+  const zip = new JSZip();
+  for (let i = 0; i < eqs.length; i++) {
+    avance(i + 1, eqs.length);
+    zip.file(`QR_${nombreArchivo(eqs[i].equipo)}.png`, await etiquetaUnidad(eqs[i]));
+  }
+  descargarBlob(await zip.generateAsync({ type: 'blob' }), `QR_${nombreArchivo(nombre)}.zip`);
+}
 
-function hojaDescarga(eq, unidad = '') {
-  const us = unidadesDe(eq);
-  const pre = us.find((u) => u.equipo === unidad) ? unidad : (us[0] || {}).equipo || '';
+function hojaDescarga(eq) {
+  const todos = delModelo(eq.modelo);
   abrirCapa(`<div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="t-desc">
     <h2 id="t-desc">Descargar</h2>
-    <p>${esc(eq.activo)} · seleccione qué desea descargar.</p>
-    ${us.length ? `<div class="opcion opcion-sel">
-        <span class="op-icono">${I('qr')}</span>
-        <span style="flex:1;min-width:0"><b>QR de un equipo</b><small>Etiqueta PNG para pegar en el equipo seleccionado</small>
-          <span class="fila-sel"><select id="d-unidad" aria-label="Equipo">${us.map((u) => `<option value="${esc(u.equipo)}" ${u.equipo === pre ? 'selected' : ''}>${esc(u.equipo)}${u.modelo ? ` · ${esc(u.modelo)}` : ''}</option>`).join('')}</select>
-          <button type="button" class="btn btn-primario btn-peq" data-desc="qr-unidad">${I('descargar', 'i-peq')} Descargar</button></span></span>
-      </div>
-      ${us.length > 1 ? `<button type="button" class="opcion" data-desc="qr-todos"><span class="op-icono">${I('qr')}</span><span><b>QR de todos los equipos (${us.length})</b><small>Archivo ZIP con una etiqueta PNG por equipo</small></span></button>` : ''}` : ''}
-    <button type="button" class="opcion" data-desc="qr"><span class="op-icono">${I('qr')}</span><span><b>QR general de la matriz</b><small>Etiqueta PNG de la matriz, sin equipo específico</small></span></button>
+    <p>Equipo ${esc(eq.equipo)} · seleccione qué desea descargar.</p>
+    <button type="button" class="opcion" data-desc="qr"><span class="op-icono">${I('qr')}</span><span><b>Código QR del equipo ${esc(eq.equipo)}</b><small>Etiqueta PNG para imprimir y pegar en el equipo</small></span></button>
     <button type="button" class="opcion" data-desc="matriz"><span class="op-icono">${I('doc')}</span><span><b>Matriz de lubricación</b><small>Imagen PNG en alta resolución</small></span></button>
+    ${todos.length > 1 ? `<button type="button" class="opcion" data-desc="qr-todos"><span class="op-icono">${I('qr')}</span><span><b>QR de los ${todos.length} equipos ${esc(eq.modelo)}</b><small>Archivo ZIP con una etiqueta por equipo</small></span></button>` : ''}
     <button type="button" class="btn btn-fantasma ancho" data-cerrar>Cancelar</button>
   </div>`);
   capa.querySelectorAll('[data-desc]').forEach((b) => b.addEventListener('click', async () => {
     if (capa.querySelector('[data-ocupado]')) return;
-    const caja = b.closest('.opcion') || b;
-    caja.setAttribute('aria-busy', 'true');
-    caja.setAttribute('data-ocupado', '');
-    const small = caja.querySelector('small'), antes = small.textContent;
+    b.setAttribute('aria-busy', 'true');
+    b.setAttribute('data-ocupado', '');
+    const small = b.querySelector('small'), antes = small.textContent;
     small.textContent = 'Generando…';
+    const tipo = b.dataset.desc;
     try {
-      const nombre = nombreArchivo(eq.codigo ? `${eq.activo}_${eq.codigo}` : eq.activo);
-      const tipo = b.dataset.desc;
-      if (tipo === 'qr-unidad') {
-        const u = us.find((x) => x.equipo === $('#d-unidad').value);
-        descargarBlob(await etiquetaUnidad(eq, u), `QR_${nombreArchivo(u.equipo)}.png`);
-      } else if (tipo === 'qr-todos') {
-        const JSZip = await cargarJSZip();
-        const zip = new JSZip();
-        for (let i = 0; i < us.length; i++) {
-          small.textContent = `Generando ${i + 1} de ${us.length}…`;
-          zip.file(`QR_${nombreArchivo(us[i].equipo)}.png`, await etiquetaUnidad(eq, us[i]));
-        }
-        descargarBlob(await zip.generateAsync({ type: 'blob' }), `QR_equipos_${nombre}.zip`);
-      } else if (tipo === 'qr') {
-        const blob = await etiquetaQR({
-          titulo: eq.activo, eyebrow: 'Matriz de cambio de aceite',
-          detalle: eq.codigo ? `Código ${eq.codigo}` : (eq.lugar || lugarGeneral()),
-          url: urlEquipo(eq.id), pie: `${eq.departamento || 'Departamento de Tribología'} · ${eq.lugar || lugarGeneral()}`, logoBlanco: LOGO_BLANCO,
-        });
-        descargarBlob(blob, `QR_${nombre}.png`);
-      } else {
-        const blob = await imagenMatriz({ equipo: eq, lubricantes: lubricantesDe(eq), url: unidad ? urlUnidad(unidad) : urlEquipo(eq.id), logoBlanco: LOGO_BLANCO, src, lis: lisSrc, unidades: us });
-        descargarBlob(blob, `Matriz_${nombre}.png`);
+      if (tipo === 'qr') descargarBlob(await etiquetaUnidad(eq), `QR_${nombreArchivo(eq.equipo)}.png`);
+      else if (tipo === 'qr-todos') await zipQR(todos, `equipos_${eq.modelo}`, (i, n) => { small.textContent = `Generando ${i} de ${n}…`; });
+      else {
+        const blob = await imagenMatriz({ equipo: eq, lubricantes: lubricantesDe(eq), url: urlUnidad(eq.id), logoBlanco: LOGO_BLANCO, src, lis: lisSrc });
+        descargarBlob(blob, `Matriz_${nombreArchivo(eq.equipo)}.png`);
       }
       cerrarCapa(false);
       toast(tipo === 'qr-todos' ? 'ZIP descargado' : 'Imagen descargada');
     } catch (e) {
       console.error(e);
       small.textContent = antes;
-      caja.removeAttribute('aria-busy'); caja.removeAttribute('data-ocupado');
+      b.removeAttribute('aria-busy'); b.removeAttribute('data-ocupado');
       toast('No se pudo generar la descarga. Intente de nuevo.', 'error');
     }
   }));
@@ -706,11 +724,11 @@ function vistaSelector() {
   app.innerHTML = `${barraAdmin('Editar matriz')}
   <section class="contenedor vista-admin">
     ${bannerSinToken()}
-    <h1>¿Qué matriz desea editar?</h1>
-    <p class="lead">Busque y seleccione el equipo.</p>
-    ${htmlBuscador('Buscar equipo o código')}
+    <h1>¿Qué equipo desea editar?</h1>
+    <p class="lead">Cada equipo tiene su propia matriz. Despliegue el modelo y seleccione el equipo.</p>
+    ${htmlBuscador('Buscar equipo, modelo o flota')}
     <p class="conteo" id="conteo"></p>
-    <ul class="tarjetas" id="lista"></ul>
+    <ul class="tarjetas grupos" id="lista"></ul>
   </section>`;
   montarBuscador('editar');
 }
@@ -725,7 +743,7 @@ const puntoVacio = () => ({ componente: '', codigoLIS: '', lubricante: '', canti
 function equipoNuevo() {
   const t = plantilla();
   return {
-    id: '', activo: '', codigo: '', lugar: t.lugar || '', fechaElaboracion: hoyISO(), actualizado: null, imagen: '', foto: '', unidades: [],
+    id: '', equipo: '', descripcion: '', modelo: '', flota: '', plantilla: '', activo: '', codigo: '', lugar: t.lugar || '', fechaElaboracion: hoyISO(), actualizado: null, imagen: '', foto: '',
     puntos: [puntoVacio()], fichas: [], advertencia: t.advertencia || '', primerosAuxilios: clonar(t.primerosAuxilios || {}),
     incendios: t.incendios || '', departamento: t.departamento || 'Departamento de Tribología',
   };
@@ -737,18 +755,18 @@ function vistaEditor(id) {
   if (!ed || ed.idRuta !== idRuta) {
     let original = null, borrador;
     if (id) {
-      const eq = estado.datos.equipos.find((e) => e.id === id);
+      const eq = buscarEquipo(id);
       if (!eq) { toast('No se encontró la matriz seleccionada', 'error'); ir({ vista: 'editar' }, { reemplazar: true }); return; }
       original = clonar(eq); borrador = clonar(eq);
       borrador.primerosAuxilios = borrador.primerosAuxilios || {};
     } else borrador = equipoNuevo();
     ed = estado.editor = {
-      idRuta, modo: id ? 'editar' : 'nuevo', original, borrador,
+      idRuta, modo: id ? 'editar' : 'nuevo', original, borrador, aplicarA: new Set(),
       lubsOriginal: clonar(estado.datos.lubricantes || {}), lubs: clonar(estado.datos.lubricantes || {}), pendientes: {},
     };
   }
   const b = ed.borrador, pa = b.primerosAuxilios;
-  const titulo = ed.modo === 'nuevo' ? 'Nueva matriz' : `Editar · ${ed.original.activo}`;
+  const titulo = ed.modo === 'nuevo' ? 'Nueva matriz' : `Editar · ${ed.original.equipo}`;
   document.title = titulo;
   const valores = (k) => [...new Set(estado.datos.equipos.flatMap((e) => e.puntos.map((p) => p[k])).filter((v) => !vacio(v)))];
   const area = (campo, etq, valor, filas = 4) => `<label class="campo"><span>${etq}</span><textarea data-campo="${campo}" rows="${filas}">${esc(valor || '')}</textarea></label>`;
@@ -756,23 +774,33 @@ function vistaEditor(id) {
   app.innerHTML = `${barraAdmin(titulo, ed.modo === 'nuevo' ? { vista: 'inicio' } : { vista: 'editar' })}
   <form class="contenedor vista-admin" id="f-editor" novalidate>
     ${bannerSinToken()}
-    <h1>${ed.modo === 'nuevo' ? 'Nueva matriz de lubricación' : esc(ed.original.activo)}</h1>
+    <h1>${ed.modo === 'nuevo' ? 'Nueva matriz de equipo' : `Equipo ${esc(ed.original.equipo)}`}</h1>
     ${ed.modo === 'nuevo'
-      ? `<p class="lead">Complete los datos del equipo. El código QR se genera automáticamente al guardar.</p>
-         <label class="campo" style="margin-top:16px"><span>Partir de otra matriz (opcional)</span>
-           <select id="copiar-de"><option value="">Matriz en blanco</option>${estado.datos.equipos.map((e) => `<option value="${esc(e.id)}">${esc(e.activo)}${e.codigo ? ` · ${esc(e.codigo)}` : ''}</option>`).join('')}</select>
-           <small>Copia los puntos, lubricantes e imagen de un equipo similar para ahorrar tiempo.</small></label>`
-      : `<p class="nota-qr">${I('qr')}<span>El código QR de esta matriz se conserva aunque cambie sus datos (<code>?eq=${esc(b.id)}</code>).</span></p>`}
+      ? `<p class="lead">Cada equipo tiene su propia matriz y su propio QR. Elija el equipo y, si quiere, copie la matriz de un equipo parecido.</p>
+         <label class="campo" style="margin-top:16px"><span>Partir de (opcional)</span>
+           <select id="copiar-de"><option value="">Matriz en blanco</option>
+             <optgroup label="Equipos con matriz">${estado.datos.equipos.map((e) => `<option value="e:${esc(e.id)}">${esc(e.equipo)} · ${esc(e.modelo)}</option>`).join('')}</optgroup>
+             <optgroup label="Matrices por modelo (Excel original)">${(estado.datos.plantillas || []).map((p) => `<option value="p:${esc(p.id)}">${esc(p.activo)}</option>`).join('')}</optgroup>
+           </select>
+           <small>Copia los puntos, lubricantes, fichas e imagen para ahorrar tiempo.</small></label>`
+      : `<p class="nota-qr">${I('qr')}<span>Esta es la matriz solo del equipo ${esc(b.equipo)}. Su QR se conserva aunque cambie los datos (<code>?u=${esc(b.id)}</code>).</span></p>`}
     <div id="errores"></div>
 
     <fieldset class="ed-seccion"><legend>Datos del equipo</legend>
       <div class="rejilla rejilla-2">
-        <label class="campo"><span>Activo (nombre del equipo) <span class="req">*</span></span><input data-campo="activo" value="${esc(b.activo)}" required autocomplete="off" placeholder="Ej.: CAT MONTACARGA"></label>
-        <label class="campo"><span>Código</span><input data-campo="codigo" value="${esc(b.codigo)}" autocomplete="off" placeholder="Ej.: MC-01"></label>
+        <label class="campo"><span>Equipo (código IH08) <span class="req">*</span></span><input data-campo="equipo" value="${esc(b.equipo)}" ${ed.modo === 'nuevo' ? 'list="dl-ih08" required' : 'readonly'} autocomplete="off" placeholder="Ej.: T013" autocapitalize="characters">
+          ${ed.modo === 'nuevo' ? '<small>Escriba o elija un equipo del IH08 que aún no tenga matriz.</small>' : '<small>El código del equipo no se puede cambiar: es el que usa su QR.</small>'}</label>
+        <label class="campo"><span>Descripción</span><input data-campo="descripcion" value="${esc(b.descripcion || '')}" autocomplete="off"></label>
+        <label class="campo"><span>Modelo</span><input data-campo="modelo" value="${esc(b.modelo || '')}" list="dl-modelos" autocomplete="off"></label>
+        <label class="campo"><span>Flota</span><input data-campo="flota" value="${esc(b.flota || '')}" list="dl-flotas" autocomplete="off"></label>
+        <label class="campo"><span>Nombre de la matriz</span><input data-campo="activo" value="${esc(b.activo || '')}" autocomplete="off" placeholder="Ej.: TH430 SANDVIK"></label>
         <label class="campo"><span>Lugar</span><input data-campo="lugar" value="${esc(b.lugar)}" autocomplete="off"></label>
         <label class="campo"><span>Fecha de elaboración</span><input type="date" data-campo="fechaElaboracion" value="${esc(b.fechaElaboracion || '')}"></label>
       </div>
     </fieldset>
+    <datalist id="dl-ih08">${(estado.datos.ih08 || []).filter((u) => !buscarEquipo(u.equipo)).map((u) => `<option value="${esc(u.equipo)}">${esc([u.modelo, u.descripcion].filter(Boolean).join(' · '))}</option>`).join('')}</datalist>
+    <datalist id="dl-modelos">${unicos(estado.datos.equipos.map((e) => e.modelo)).map((v) => `<option value="${esc(v)}">`).join('')}</datalist>
+    <datalist id="dl-flotas">${unicos(estado.datos.equipos.map((e) => e.flota)).map((v) => `<option value="${esc(v)}">`).join('')}</datalist>
 
     <fieldset class="ed-seccion"><legend>Imagen de puntos de lubricación</legend>
       <div id="ed-img"></div>
@@ -780,11 +808,6 @@ function vistaEditor(id) {
 
     <fieldset class="ed-seccion"><legend>Foto del equipo (pantalla de inicio)</legend>
       <div id="ed-foto"></div>
-    </fieldset>
-
-    <fieldset class="ed-seccion"><legend>Equipos que usan esta matriz (IH08)</legend>
-      <p class="ayuda">Marque los equipos de la lista IH08 que usan esta matriz. Cada equipo tiene su propio QR y pertenece a una sola matriz: si marca uno que está en otra matriz, al guardar se mueve a esta y su QR abrirá esta matriz.</p>
-      <div id="ed-unidades"></div>
     </fieldset>
 
     <fieldset class="ed-seccion"><legend>Puntos de cambio de aceite</legend>
@@ -816,6 +839,11 @@ function vistaEditor(id) {
       <label class="campo"><span>Departamento responsable</span><input data-campo="departamento" value="${esc(b.departamento || '')}"></label>
     </fieldset>
 
+    <fieldset class="ed-seccion"><legend>Aplicar también a otros equipos (opcional)</legend>
+      <p class="ayuda">Por defecto solo se guarda la matriz de este equipo. Si marca otros equipos, se les copian los puntos, lubricantes, fichas, imagen de puntos y seguridad de esta matriz. Sus datos de equipo y su foto no cambian.</p>
+      <div id="ed-unidades"></div>
+    </fieldset>
+
     <datalist id="dl-lub">${Object.values(estado.datos.lubricantes || {}).map((l) => `<option value="${esc(l.nombre)}">`).join('')}</datalist>
     <datalist id="dl-metodo">${valores('metodo').map((v) => `<option value="${esc(v)}">`).join('')}</datalist>
     <datalist id="dl-tarea">${valores('tarea').map((v) => `<option value="${esc(v)}">`).join('')}</datalist>
@@ -826,7 +854,6 @@ function vistaEditor(id) {
     </div></div>
   </form>`;
   b.fichas = b.fichas || [];
-  b.unidades = b.unidades || [];
   pintarImagenEditor();
   pintarFotoEditor();
   pintarUnidadesEditor();
@@ -841,6 +868,15 @@ function vistaEditor(id) {
       const [a, k] = t.dataset.campo.split('.');
       if (k) b[a][k] = t.value; else b[a] = t.value;
       t.closest('.campo')?.classList.remove('invalido');
+      if (a === 'equipo' && ed.modo === 'nuevo') {
+        b.equipo = t.value = t.value.toUpperCase().trim();
+        const u = mapaIH08().get(b.equipo);
+        if (u) {
+          ['descripcion', 'modelo', 'flota'].forEach((c) => { if (u[c]) { b[c] = u[c]; $(`[data-campo="${c}"]`).value = u[c]; } });
+        }
+        pintarUnidadesEditor();
+      }
+      if (a === 'modelo') pintarUnidadesEditor();
     } else if (t.dataset.k) {
       const i = +t.closest('[data-i]').dataset.i;
       b.puntos[i][t.dataset.k] = t.value;
@@ -857,21 +893,22 @@ function vistaEditor(id) {
     if (e.target.dataset.k === 'lubricante') pintarLubsEditor();
     if (e.target.matches('input[type=file]')) cargarImagenEditor(e.target);
     if (e.target.dataset.unidad) {
-      const c = e.target.dataset.unidad, set = new Set(b.unidades);
-      if (e.target.checked) set.add(c); else set.delete(c);
-      b.unidades = [...set].sort((x, y) => x.localeCompare(y, 'es', { numeric: true }));
+      if (e.target.checked) ed.aplicarA.add(e.target.dataset.unidad); else ed.aplicarA.delete(e.target.dataset.unidad);
       pintarUnidadesEditor();
     }
   });
   const copiar = $('#copiar-de');
   if (copiar) copiar.addEventListener('change', () => {
-    const o = estado.datos.equipos.find((e) => e.id === copiar.value);
+    const [tipo, oid] = copiar.value.split(/:(.*)/s);
+    const o = tipo === 'p' ? (estado.datos.plantillas || []).find((x) => x.id === oid) : buscarEquipo(oid);
     if (!o) return;
-    b.puntos = clonar(o.puntos);
-    b.imagen = o.imagen || '';
-    b.fichas = clonar(o.fichas || []);
-    pintarImagenEditor(); pintarPuntosEditor(); pintarLubsEditor(); pintarFichasEditor();
-    toast(`Se copiaron ${o.puntos.length} puntos de ${o.activo}`);
+    ['puntos', 'fichas', 'primerosAuxilios'].forEach((k) => { b[k] = clonar(o[k] || (k === 'primerosAuxilios' ? {} : [])); });
+    ['imagen', 'advertencia', 'incendios', 'departamento', 'activo'].forEach((k) => { b[k] = o[k] || ''; });
+    if (!b.foto && o.foto) b.foto = o.foto;
+    b.plantilla = tipo === 'p' ? o.id : (o.plantilla || '');
+    if (tipo === 'e') { ['modelo', 'flota'].forEach((k) => { if (!b[k] && o[k]) b[k] = o[k]; }); }
+    vistaEditor(null);
+    toast(`Se copiaron ${o.puntos.length} puntos de ${o.equipo || o.activo}`);
   });
   f.addEventListener('submit', (e) => { e.preventDefault(); validarYRegistrar(); });
 }
@@ -919,23 +956,25 @@ function pintarFotoEditor() {
 }
 
 function pintarUnidadesEditor() {
-  const b = estado.editor.borrador, caja = $('#ed-unidades');
+  const ed = estado.editor, b = ed.borrador, caja = $('#ed-unidades');
+  if (!caja) return;
   if (!$('#u-buscar', caja)) {
     caja.innerHTML = `<p class="ayuda" id="u-cuenta"></p>
-      <div class="filtro-buscar" style="padding:0 0 8px">${I('buscar', 'i-peq')}<input id="u-buscar" type="search" placeholder="Buscar por código, modelo, flota o descripción" autocomplete="off"></div>
+      <div class="filtro-buscar" style="padding:0 0 8px">${I('buscar', 'i-peq')}<input id="u-buscar" type="search" placeholder="Buscar equipo, modelo o flota" autocomplete="off"></div>
       <ul class="filtro-opciones u-lista" id="u-lista"></ul>`;
   }
-  const sel = new Set(b.unidades);
+  const sel = ed.aplicarA;
   const qn = sinAcentos($('#u-buscar').value).toLowerCase();
-  const otras = new Map();
-  estado.datos.equipos.forEach((e) => { if (e.id !== b.id) (e.unidades || []).forEach((c) => { if (!otras.has(c)) otras.set(c, e.activo); }); });
-  const lista = (estado.datos.ih08 || []).filter((u) => !qn || sinAcentos(`${u.equipo} ${u.modelo} ${u.flota} ${u.descripcion}`).toLowerCase().includes(qn))
-    .sort((x, y) => (sel.has(y.equipo) - sel.has(x.equipo)) || x.equipo.localeCompare(y.equipo, 'es', { numeric: true }));
-  $('#u-cuenta').innerHTML = `<b>${sel.size}</b> equipo${sel.size === 1 ? '' : 's'} seleccionado${sel.size === 1 ? '' : 's'}${sel.size ? `: ${esc([...sel].join(', '))}` : ''}`;
+  const lista = estado.datos.equipos.filter((e) => e.id !== b.id && e.equipo !== b.equipo)
+    .filter((e) => (qn ? sinAcentos(`${e.equipo} ${e.modelo} ${e.flota} ${e.descripcion}`).toLowerCase().includes(qn) : e.modelo === b.modelo || sel.has(e.id)))
+    .sort((x, y) => (sel.has(y.id) - sel.has(x.id)) || ((y.modelo === b.modelo) - (x.modelo === b.modelo)) || x.equipo.localeCompare(y.equipo, 'es', { numeric: true }));
+  $('#u-cuenta').innerHTML = sel.size
+    ? `Se aplicará también a <b>${sel.size}</b> equipo${sel.size === 1 ? '' : 's'}: ${esc([...sel].join(', '))}`
+    : `Solo se guardará el equipo <b>${esc(b.equipo || '(nuevo)')}</b>.${b.modelo ? ` Abajo están los demás ${esc(b.modelo)}; busque para ver otros modelos.` : ''}`;
   $('#u-lista').innerHTML = lista.slice(0, 250).map((u) => `<li><label class="opcion-f">
-      <input type="checkbox" data-unidad="${esc(u.equipo)}" ${sel.has(u.equipo) ? 'checked' : ''}>
+      <input type="checkbox" data-unidad="${esc(u.id)}" ${sel.has(u.id) ? 'checked' : ''}>
       <span>${esc(u.equipo)} <small>${esc([u.modelo, u.flota].filter(Boolean).join(' · '))}</small></span>
-      <span class="cnt">${otras.has(u.equipo) ? `en ${esc(otras.get(u.equipo))}` : ''}</span></label></li>`).join('') || '<li class="filtro-vacio">Sin coincidencias</li>';
+      ${b.equipo && ed.original ? (firma(u) !== firma(ed.original) ? '<span class="cnt">matriz distinta</span>' : '<span class="cnt">misma matriz</span>') : ''}</label></li>`).join('') || '<li class="filtro-vacio">Sin equipos para mostrar. Busque por código o modelo.</li>';
 }
 
 function pintarFichasEditor() {
@@ -1000,7 +1039,9 @@ async function cargarImagenEditor(input) {
 }
 
 /* --------------------------------------------------- Cambios realizados */
-const ETQ = { activo: 'Activo', codigo: 'Código', lugar: 'Lugar', fechaElaboracion: 'Fecha de elaboración', departamento: 'Departamento' };
+const ETQ = { descripcion: 'Descripción', modelo: 'Modelo', flota: 'Flota', activo: 'Nombre de la matriz', lugar: 'Lugar', fechaElaboracion: 'Fecha de elaboración', departamento: 'Departamento' };
+/** Contenido de la matriz que se copia al «aplicar también a» otros equipos. */
+const CONTENIDO = ['puntos', 'fichas', 'imagen', 'advertencia', 'primerosAuxilios', 'incendios', 'departamento', 'activo'];
 const ETQ_TXT = { advertencia: 'Advertencia', incendios: 'Medida contra incendios' };
 const ETQ_PA = { ojos: 'Ojos', piel: 'Piel', ingestion: 'Ingestión', inhalacion: 'Inhalación', nota: 'Nota' };
 const ETQ_P = Object.fromEntries(CAMPOS_PUNTO.map(([k, e]) => [k, e]));
@@ -1010,9 +1051,8 @@ const fmt = (v) => (norm(v) ? `"${norm(v)}"` : '(vacío)');
 function calcularCambios(ed) {
   const a = ed.original, b = ed.borrador, out = [];
   if (!a) {
-    out.push(`Creación de la matriz con ${b.puntos.length} punto${b.puntos.length === 1 ? '' : 's'}: ${b.puntos.map((p) => norm(p.componente) || '—').join(', ')}`);
+    out.push(`Creación de la matriz del equipo ${norm(b.equipo)} con ${b.puntos.length} punto${b.puntos.length === 1 ? '' : 's'}: ${b.puntos.map((p) => norm(p.componente) || '—').join(', ')}`);
     if (b.imagen) out.push('Imagen de puntos de lubricación agregada');
-    if ((b.unidades || []).length) out.push(`Equipos asociados: ${b.unidades.map((c) => { const o = estado.datos.equipos.find((e) => (e.unidades || []).includes(c)); return o ? `${c} (sale de ${o.activo})` : c; }).join(', ')}`);
   } else {
     Object.keys(ETQ).forEach((k) => { if (norm(a[k]) !== norm(b[k])) out.push(`${ETQ[k]}: ${fmt(a[k])} → ${fmt(b[k])}`); });
     if (norm(a.imagen) !== norm(b.imagen)) out.push(!b.imagen ? 'Imagen de puntos de lubricación eliminada' : a.imagen ? 'Imagen de puntos de lubricación reemplazada' : 'Imagen de puntos de lubricación agregada');
@@ -1027,10 +1067,6 @@ function calcularCambios(ed) {
     }
     Object.keys(ETQ_TXT).forEach((k) => { if (norm(a[k]) !== norm(b[k])) out.push(`${ETQ_TXT[k]}: texto modificado`); });
     if (norm(a.foto) !== norm(b.foto)) out.push(!b.foto ? 'Foto del equipo eliminada' : a.foto ? 'Foto del equipo reemplazada' : 'Foto del equipo agregada');
-    const uA = new Set(a.unidades || []), uB = new Set(b.unidades || []);
-    const mas = [...uB].filter((x) => !uA.has(x)), menos = [...uA].filter((x) => !uB.has(x));
-    if (mas.length) out.push(`Equipos agregados: ${mas.map((c) => { const o = estado.datos.equipos.find((e) => e.id !== b.id && (e.unidades || []).includes(c)); return o ? `${c} (sale de ${o.activo})` : c; }).join(', ')}`);
-    if (menos.length) out.push(`Equipos retirados: ${menos.join(', ')}`);
     const fA = JSON.stringify((a.fichas || []).map((f) => [norm(f.nombre), norm(f.url)]));
     const fB = JSON.stringify((b.fichas || []).map((f) => [norm(f.nombre), norm(f.url)]));
     if (fA !== fB) out.push(`Fichas técnicas modificadas (${(a.fichas || []).length} → ${(b.fichas || []).length})`);
@@ -1041,6 +1077,7 @@ function calcularCambios(ed) {
     const antes = (ed.lubsOriginal[k] || {}).imagen, ahora = (ed.lubs[k] || {}).imagen;
     out.push(`Imagen del lubricante ${(ed.lubs[k] || ed.lubsOriginal[k]).nombre}: ${!ahora ? 'eliminada' : antes ? 'reemplazada' : 'agregada'}`);
   });
+  if (ed.aplicarA && ed.aplicarA.size) out.push(`Contenido de la matriz aplicado también a: ${[...ed.aplicarA].join(', ')}`);
   return out;
 }
 function lubsCambiados(ed) {
@@ -1051,7 +1088,7 @@ function lubsCambiados(ed) {
 function validarYRegistrar() {
   const ed = estado.editor, b = ed.borrador, errores = [];
   $$('.campo.invalido').forEach((c) => c.classList.remove('invalido'));
-  if (!norm(b.activo)) { errores.push('Escriba el nombre del activo.'); $('[data-campo="activo"]').closest('.campo').classList.add('invalido'); }
+  if (!norm(b.equipo)) { errores.push('Escriba el código del equipo.'); $('[data-campo="equipo"]').closest('.campo').classList.add('invalido'); }
   if (!b.puntos.length) errores.push('Agregue al menos un punto de cambio de aceite.');
   b.puntos.forEach((p, i) => {
     if (!norm(p.componente)) { errores.push(`Punto ${i + 1}: escriba el componente.`); $(`[data-i="${i}"] [data-k="componente"]`).closest('.campo').classList.add('invalido'); }
@@ -1059,10 +1096,11 @@ function validarYRegistrar() {
   (b.fichas || []).forEach((f, i) => {
     if (norm(f.url) && !/^https?:\/\//i.test(norm(f.url))) { errores.push(`Ficha técnica ${i + 1}: el enlace debe empezar por https://`); $(`[data-f="${i}"] [data-fk="url"]`).closest('.campo').classList.add('invalido'); }
   });
-  if (ed.modo === 'nuevo') {
-    const id = clave(`${b.activo} ${b.codigo}`);
-    if (norm(b.activo) && estado.datos.equipos.some((e) => clave(`${e.activo} ${e.codigo}`) === id)) errores.push('Ya existe una matriz con ese activo y código. Use otro código o edite la existente.');
+  if (ed.modo === 'nuevo' && norm(b.equipo) && buscarEquipo(norm(b.equipo))) {
+    errores.push(`El equipo ${norm(b.equipo)} ya tiene matriz. Edítela desde «Editar matriz».`);
+    $('[data-campo="equipo"]').closest('.campo').classList.add('invalido');
   }
+  if (ed.modo === 'nuevo' && norm(b.equipo) && !/^[A-Za-z0-9._-]+$/.test(norm(b.equipo))) errores.push('El código del equipo solo puede tener letras, números, punto, guion o guion bajo.');
   const caja = $('#errores');
   if (errores.length) {
     caja.innerHTML = `<div class="errores" role="alert"><b>Revise antes de guardar:</b><ul>${errores.map((e) => `<li>${esc(e)}</li>`).join('')}</ul></div>`;
@@ -1088,7 +1126,8 @@ function dialogoRegistro(cambios) {
       <h3>Se registra automáticamente</h3>
       <dl>
         <dt>Fecha</dt><dd>${esc(fechaHora(fecha))}</dd>
-        <dt>Matriz</dt><dd>${esc(ed.borrador.activo)} · ${ed.modo === 'nuevo' ? 'creación' : 'actualización'}</dd>
+        <dt>Matriz</dt><dd>Equipo ${esc(ed.borrador.equipo)} · ${ed.modo === 'nuevo' ? 'creación' : 'actualización'}</dd>
+        ${ed.aplicarA.size ? `<dt>También a</dt><dd>${esc([...ed.aplicarA].join(', '))}</dd>` : ''}
       </dl>
       <h3>Cambios realizados (${cambios.length})</h3>
       <ul class="cambios">${cambios.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
@@ -1113,7 +1152,7 @@ function dialogoRegistro(cambios) {
     $$('[data-cerrar]', f).forEach((x) => { x.disabled = true; });
     const prog = (t) => { $('#r-progreso').innerHTML = `<p class="progreso"><span class="giro" aria-hidden="true"></span>${esc(t)}</p>`; };
     try {
-      const eq = await guardarEnGitHub(ed, { nombre, documento: doc, accion: ed.modo === 'nuevo' ? 'Creación' : 'Actualización', matriz: norm(ed.borrador.activo), cambios }, prog);
+      const eq = await guardarEnGitHub(ed, { nombre, documento: doc, accion: ed.modo === 'nuevo' ? 'Creación' : 'Actualización', matriz: norm(ed.borrador.equipo), aplicadoA: [...ed.aplicarA], cambios }, prog);
       estado.editor = null;
       dialogoExito(eq, ed.modo);
     } catch (x) {
@@ -1131,11 +1170,11 @@ function dialogoExito(eq, modo) {
   abrirCapa(`<div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="t-ok">
     <div class="d-icono ok">${I('check')}</div>
     <h2 id="t-ok">${modo === 'nuevo' ? 'Matriz creada' : 'Cambios guardados'}</h2>
-    <p>${esc(eq.activo)} quedó guardada y registrada en el historial. Los técnicos verán la actualización en 1 a 2 minutos, el tiempo que tarda GitHub en publicarla.</p>
+    <p>La matriz del equipo ${esc(eq.equipo)} quedó guardada y registrada en el historial. Los técnicos verán la actualización en 1 a 2 minutos, el tiempo que tarda GitHub en publicarla.</p>
     ${modo === 'nuevo' ? '<p>Descargue el código QR desde la matriz para imprimirlo y pegarlo en el equipo.</p>' : ''}
     <div class="d-acciones"><button type="button" class="btn btn-fantasma" id="ok-inicio">Ir al inicio</button><button type="button" class="btn btn-primario" id="ok-ver">Ver matriz</button></div>
-  </div>`, { alCerrar: () => ir({ vista: 'matriz', id: eq.id }) });
-  $('#ok-ver').onclick = () => { cerrarCapa(false); ir({ vista: 'matriz', id: eq.id }); };
+  </div>`, { alCerrar: () => ir({ vista: 'unidad', codigo: eq.id }) });
+  $('#ok-ver').onclick = () => { cerrarCapa(false); ir({ vista: 'unidad', codigo: eq.id }); };
   $('#ok-inicio').onclick = () => { cerrarCapa(false); ir({ vista: 'inicio' }); };
 }
 
@@ -1153,15 +1192,14 @@ async function guardarEnGitHub(ed, registro, progreso) {
       remoto.lubricantes = remoto.lubricantes || {};
       const ahora = ahoraISO();
       const eq = clonar(ed.borrador);
-      ['activo', 'codigo', 'lugar', 'departamento'].forEach((k) => { eq[k] = norm(eq[k]); });
+      ['equipo', 'descripcion', 'modelo', 'flota', 'activo', 'codigo', 'lugar', 'departamento'].forEach((k) => { eq[k] = norm(eq[k]); });
       eq.puntos = eq.puntos.map((p) => Object.fromEntries(Object.entries(p).map(([k, v]) => [k, norm(v)])));
       eq.fichas = (eq.fichas || []).map((f) => ({ nombre: norm(f.nombre), url: norm(f.url) })).filter((f) => f.nombre || f.url);
       eq.actualizado = ahora;
       if (ed.modo === 'nuevo') {
-        const base = clave(`${eq.activo} ${eq.codigo}`) || 'equipo';
-        let id = base, k = 2;
-        while (remoto.equipos.some((e) => e.id === id)) id = `${base}-${k++}`;
-        eq.id = id;
+        eq.equipo = eq.equipo.toUpperCase();
+        if (remoto.equipos.some((e) => e.id.toUpperCase() === eq.equipo)) throw new Error(`El equipo ${eq.equipo} ya tiene matriz (otra persona pudo crearla). Edítela desde «Editar matriz».`);
+        eq.id = eq.equipo;
         remoto.equipos.push(eq);
       } else {
         const i = remoto.equipos.findIndex((e) => e.id === eq.id);
@@ -1171,10 +1209,16 @@ async function guardarEnGitHub(ed, registro, progreso) {
       lubricantesDe(eq, remoto.lubricantes).forEach((l) => {
         if (!remoto.lubricantes[l.clave]) remoto.lubricantes[l.clave] = { nombre: l.nombre, imagen: (ed.lubs[l.clave] || {}).imagen || '' };
       });
-      // Cada equipo (IH08) queda en una sola matriz: se retira de las demás
-      const mias = new Set(eq.unidades || []);
-      remoto.equipos.forEach((o) => { if (o.id !== eq.id && o.unidades) o.unidades = o.unidades.filter((c) => !mias.has(c)); });
-      remoto.equipos.sort((a, b) => a.activo.localeCompare(b.activo, 'es'));
+      // «Aplicar también a»: copia el contenido de la matriz a los equipos marcados
+      const aplicados = [];
+      (ed.aplicarA || new Set()).forEach((id) => {
+        const o = remoto.equipos.find((x) => x.id === id);
+        if (!o || o.id === eq.id) return;
+        CONTENIDO.forEach((k) => { o[k] = clonar(eq[k] ?? ''); });
+        o.actualizado = ahora;
+        aplicados.push(o.equipo);
+      });
+      remoto.equipos.sort((a, b) => (a.modelo || '').localeCompare(b.modelo || '', 'es', { numeric: true }) || a.equipo.localeCompare(b.equipo, 'es', { numeric: true }));
       remoto.actualizado = ahora;
 
       progreso('Actualizando el historial de cambios…');
@@ -1187,17 +1231,17 @@ async function guardarEnGitHub(ed, registro, progreso) {
           throw new Error('No se pudo abrir el historial con esta contraseña. Si la contraseña cambió, vuelva a configurar en configurar.html.');
         }
       }
-      registros.push({ fecha: ahora, ...registro, matriz: eq.activo, matrizId: eq.id });
+      registros.push({ fecha: ahora, ...registro, matriz: eq.equipo, matrizId: eq.id, aplicadoA: aplicados });
       const histNuevo = { esquema: 1, registros: registros.length, cifrado: await cifrar(s.claveHistorial, JSON.stringify(registros)) };
 
       progreso('Guardando en GitHub…');
       const usadas = new Set([eq.imagen, eq.foto, ...Object.values(remoto.lubricantes).map((l) => l.imagen)]);
       const archivos = [
-        { ruta: 'data/matrices.json', texto: `${JSON.stringify(remoto, null, 2)}\n` },
+        { ruta: 'data/matrices.json', texto: `${JSON.stringify(remoto, null, 1)}\n` },
         { ruta: 'data/historial.json', texto: `${JSON.stringify(histNuevo, null, 2)}\n` },
         ...Object.entries(ed.pendientes).filter(([r]) => usadas.has(r)).map(([ruta, p]) => ({ ruta, base64: p.base64 })),
       ];
-      await repo.commit(archivos, `${ed.modo === 'nuevo' ? 'Crea' : 'Actualiza'} matriz: ${eq.activo}`);
+      await repo.commit(archivos, `${ed.modo === 'nuevo' ? 'Crea' : 'Actualiza'} matriz del equipo ${eq.equipo}${aplicados.length ? ` (+${aplicados.length} equipos)` : ''}`);
       estado.datos = remoto;
       return eq;
     } catch (e) {
@@ -1234,7 +1278,7 @@ async function vistaHistorial() {
   if (csv) csv.disabled = !regs.length;
   $('#h-lista').innerHTML = regs.length ? `<ul class="historial">${regs.map((r) => `<li class="h-item">
       <div class="h-cab"><span class="etiqueta ${r.accion === 'Creación' ? 'nueva' : ''}">${esc(r.accion)}</span><b>${esc(r.matriz)}</b><span class="h-fecha">${esc(fechaHora(r.fecha))}</span></div>
-      <p class="h-persona">${esc(r.nombre)} · Doc. ${esc(r.documento)}</p>
+      <p class="h-persona">${esc(r.nombre)} · Doc. ${esc(r.documento)}${(r.aplicadoA || []).length ? ` · también a ${esc(r.aplicadoA.join(', '))}` : ''}</p>
       <details><summary>${(r.cambios || []).length} cambio${(r.cambios || []).length === 1 ? '' : 's'} realizado${(r.cambios || []).length === 1 ? '' : 's'}</summary>
       <ul class="cambios">${(r.cambios || []).map((c) => `<li>${esc(c)}</li>`).join('')}</ul></details>
     </li>`).join('')}</ul>`
@@ -1244,8 +1288,8 @@ async function vistaHistorial() {
 function descargarCSV() {
   const regs = estado.historial || [];
   const q = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const filas = [['Fecha', 'Acción', 'Matriz', 'ID matriz', 'Nombre', 'Documento', 'Cambios realizados']]
-    .concat(regs.map((r) => [fechaHora(r.fecha), r.accion, r.matriz, r.matrizId, r.nombre, r.documento, (r.cambios || []).join(' | ')]));
+  const filas = [['Fecha', 'Acción', 'Equipo', 'Aplicado también a', 'Nombre', 'Documento', 'Cambios realizados']]
+    .concat(regs.map((r) => [fechaHora(r.fecha), r.accion, r.matriz, (r.aplicadoA || []).join(', '), r.nombre, r.documento, (r.cambios || []).join(' | ')]));
   const blob = new Blob(['﻿' + filas.map((f) => f.map(q).join(';')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
   descargarBlob(blob, `Historial_matrices_${hoyISO()}.csv`);
 }
@@ -1257,7 +1301,7 @@ document.addEventListener('click', async (e) => {
     e.preventDefault();
     if (a.dataset.nav === 'inicio') return ir({ vista: 'inicio' });
     if (a.dataset.ir) return ir({ vista: 'matriz', id: a.dataset.ir });
-    if (a.dataset.unidadIr) return ir({ vista: 'unidad', codigo: a.dataset.unidadIr, id: a.dataset.eq || '' });
+    if (a.dataset.unidadIr) return ir({ vista: 'unidad', codigo: a.dataset.unidadIr });
     if (a.dataset.editar) return ir({ vista: 'editar', id: a.dataset.editar });
     if (a.dataset.volver) return ir(JSON.parse(a.dataset.volver));
   }
@@ -1276,7 +1320,7 @@ document.addEventListener('click', async (e) => {
     case 'csv': return descargarCSV();
     case 'descargar': {
       const eq = estado.datos.equipos.find((x) => x.id === rutaActual.id);
-      if (eq) hojaDescarga(eq, rutaActual.vista === 'unidad' ? rutaActual.codigo : '');
+      if (eq) hojaDescarga(eq);
       return;
     }
     case 'qr-inicio': {
@@ -1290,6 +1334,14 @@ document.addEventListener('click', async (e) => {
       return;
     }
     case 'ampliar': return visor(b.dataset.src);
+    case 'qr-modelo': {
+      const eqs = agrupar(listaFiltrada(estado.q, true).lista).find((g) => g.modelo === b.dataset.modelo)?.eqs || delModelo(b.dataset.modelo);
+      b.disabled = true; const txt = b.innerHTML;
+      try { await zipQR(eqs, `equipos_${b.dataset.modelo}`, (i, n) => { b.textContent = `Generando ${i} de ${n}…`; }); toast('ZIP descargado'); }
+      catch (x) { console.error(x); toast('No se pudo generar el ZIP', 'error'); }
+      b.innerHTML = txt; b.disabled = false;
+      return;
+    }
     case 'cancelar-edicion': return ir(ed && ed.modo === 'editar' ? { vista: 'editar' } : { vista: 'inicio' });
     case 'agregar-punto': {
       ed.borrador.puntos.push(puntoVacio());

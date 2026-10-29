@@ -1,12 +1,12 @@
 # Matrices de lubricación · Zijin-Continental Gold
 
-Página web (GitHub Pages) con la **matriz de cambio de aceite** de cada equipo. Los técnicos escanean el QR pegado en el equipo y llegan directo a su matriz. Desde ahí pueden volver al inicio y buscar cualquier otro equipo.
+Página web (GitHub Pages) con la **matriz de cambio de aceite de cada equipo** (una por equipo del IH08: T001, DL001, B003…). En el inicio se agrupan por modelo y al desplegar el modelo se elige el equipo. Los técnicos escanean el QR pegado en el equipo y llegan directo a su matriz. Desde ahí pueden volver al inicio y buscar cualquier otro equipo.
 
-- Incluye las **80 matrices de cambio de aceite** del archivo `MATRIZ_LUBRICACION_CNL_FINAL`, cada una con su diagrama de puntos tal como está en Excel y los enlaces a las fichas técnicas de los lubricantes (los QR de «Ver información de lubricante»). Las hojas de ENGRASE no se incluyeron.
+- Cada equipo arrancó con la matriz de su modelo tomada del archivo `MATRIZ_LUBRICACION_CNL_FINAL` (80 matrices por modelo, que quedan como plantillas), cada una con su diagrama de puntos tal como está en Excel y los enlaces a las fichas técnicas de los lubricantes (los QR de «Ver información de lubricante»). Las hojas de ENGRASE no se incluyeron.
 - **Editar matriz** y **Nueva matriz** piden la contraseña de edición (`MATRIZEQUIPOS26`).
 - Antes de guardar, el editor debe escribir su **nombre** y su **documento de identificación**. La página agrega sola la **fecha**, la **matriz** y la lista de **cambios realizados**.
 - El historial se guarda **cifrado** en el repositorio. Solo se puede ver dentro de la página (botón *Historial*, con la contraseña) y se puede descargar en CSV para Excel.
-- **Cada equipo tiene su propio QR** (por ejemplo `?u=DL001`). El QR abre la matriz asignada a ese equipo. Si después se le asigna otra matriz (porque lleva lubricantes distintos), el QR ya impreso abre la nueva.
+- **Cada equipo tiene su propia matriz y su propio QR** (por ejemplo `?u=T001`). Al editar T001 solo cambia T001, así que varios equipos del mismo modelo pueden tener lubricantes, cantidades o intervalos distintos. Si quiere repetir un cambio en varios equipos, use «Aplicar también a otros equipos» en el editor.
 - El inicio tiene buscador general y filtros por **flota, modelo y equipo** (tomados del IH08), con selección múltiple, buscador y borrador de filtros.
 - Cada matriz tiene un botón **Descargar** con dos opciones: la etiqueta del **código QR** (PNG de 1500 px, lista para imprimir) o la **matriz completa** (PNG de 2400 px).
 - Editar una matriz **no cambia su QR**: el QR apunta a un identificador fijo (`?eq=cat-montacarga`), no al nombre del equipo.

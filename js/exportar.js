@@ -209,12 +209,15 @@ export async function imagenMatriz({ equipo, lubricantes, url, logoBlanco, src, 
 
     // ---- Datos del activo + QR
     const qrLado = 330, infoW = CW - qrLado - 60;
-    L.fuente(28, 700); L.texto('ACTIVO', PAD, y + 28, C.naranjaOsc);
-    let hTit = L.parrafo(equipo.activo, PAD, y + 40, infoW, 92, 800, C.tinta, 1.05, F.dsp);
-    let yy = y + 40 + hTit + 40;
+    L.fuente(28, 700); L.texto(equipo.equipo ? 'EQUIPO' : 'ACTIVO', PAD, y + 28, C.naranjaOsc);
+    let hTit = L.parrafo(equipo.equipo || equipo.activo, PAD, y + 40, infoW, 92, 800, C.tinta, 1.05, F.dsp);
+    let yy = y + 40 + hTit + 10;
+    const sub = [equipo.descripcion, equipo.activo && equipo.equipo ? `Matriz: ${equipo.activo}` : ''].filter(Boolean).join(' · ');
+    if (sub) yy += 10 + L.parrafo(sub, PAD, yy, infoW, 34, 500, C.tinta2, 1.3);
+    yy += 30;
     const campos = [
-      ['Lugar', equipo.lugar || '—'],
-      ['Código', equipo.codigo || 'Sin código'],
+      ['Modelo', equipo.modelo || '—'],
+      ['Flota', equipo.flota || '—'],
       ['Fecha de elaboración', fechaCorta(equipo.fechaElaboracion) || '—'],
       ['Última actualización', equipo.actualizado ? fechaCorta(equipo.actualizado) : '—'],
     ];

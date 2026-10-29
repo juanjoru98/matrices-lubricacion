@@ -483,3 +483,24 @@ img.lis { display: block; width: 64px; height: 22px; object-fit: fill; border-ra
 .opcion-sel { cursor: default; }
 .fila-sel { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .fila-sel select { flex: 1; min-width: 140px; min-height: 40px; padding: 6px 10px; border: 1.5px solid var(--linea-fuerte); border-radius: 10px; background: var(--superficie); font-size: 16px; color: var(--tinta); }
+
+/* ---------- Inicio por modelo con desglose de equipos */
+.grupos { grid-template-columns: 1fr !important; }
+@media (min-width: 960px) { .grupos { grid-template-columns: repeat(2, 1fr) !important; align-items: start; } }
+.grupo { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); overflow: hidden; }
+.grupo.abierto { border-color: var(--marca-borde); }
+.grupo-cab { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px 12px 12px; min-height: 88px; border: 0; background: transparent; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+.grupo-cab:hover { background: var(--superficie-2); }
+.grupo-flecha { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--marca-suave); color: var(--marca-texto); transition: transform .15s; }
+.grupo.abierto .grupo-flecha { transform: rotate(180deg); }
+.grupo-cuerpo { border-top: 1px solid var(--linea); padding: 6px 8px 10px; }
+.grupo-unidades { list-style: none; margin: 0 0 4px; padding: 0; }
+.grupo-unidades a { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 10px; border-radius: 10px; text-decoration: none; color: inherit; }
+.grupo-unidades a:hover { background: var(--marca-suave); }
+.grupo-unidades b { font-family: var(--fuente-titulo); font-size: 17px; min-width: 64px; }
+.grupo-unidades span { flex: 1; min-width: 0; color: var(--tinta-2); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.grupo-unidades .i { color: var(--tinta-3); }
+.propia { flex: none; font-style: normal; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--ambar-fondo); color: var(--ambar-tinta); border: 1px solid var(--ambar-borde); }
+.m-desc { margin: 6px 0 0; font-size: 17px; font-weight: 600; color: var(--tinta-2); }
+.m-base { margin: 10px 0 0; font-size: 14px; color: var(--tinta-3); }
+#ed-unidades .filtro-buscar .i { left: 12px; top: 13px; transform: none; }
