@@ -1,6 +1,6 @@
 {
  "esquema": 2,
- "actualizado": "2026-10-29T09:57:10-05:00",
+ "actualizado": "2026-10-29T09:59:03-05:00",
  "plantilla": {
   "lugar": "Proyecto Buriticá",
   "departamento": "Departamento de Tribología",
@@ -604,7 +604,7 @@
    "codigo": "",
    "lugar": "Proyecto Buriticá",
    "fechaElaboracion": "2024-01-08",
-   "actualizado": "2026-10-29T09:57:10-05:00",
+   "actualizado": "2026-10-29T09:59:03-05:00",
    "imagen": "img/equipos/anfomaster-rdh.jpg",
    "puntos": [
     {
@@ -620,7 +620,7 @@
     },
     {
      "componente": "TRANSMISIÓN",
-     "codigoLIS": "CKT-10W-M-G2",
+     "codigoLIS": "CKT-30-M-G2",
      "lubricante": "Chevron Delo TORQFORCE SAE 30",
      "cantidad": "7",
      "tarea": "Lubricado",
