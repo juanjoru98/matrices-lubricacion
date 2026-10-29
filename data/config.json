@@ -1,10 +1,17 @@
 {
-  "repo": { "owner": "", "name": "", "branch": "main" },
+  "repo": {
+    "owner": "juanjoru98",
+    "name": "matrices-lubricacion",
+    "branch": "main"
+  },
   "urlPublica": "",
   "seguridad": {
     "salt": "F/HW7gBZ0OhyLbJ8OE//Hg==",
     "iteraciones": 310000,
     "verificador": "2vcODExU+pO0m5MjifswrRvNUfbwfjRmi4H/wHZNt/s="
   },
-  "tokenCifrado": null
+  "tokenCifrado": {
+    "iv": "En/oWNOn6MCnZeGD",
+    "data": "t/E0Fsc/XxlZI1Hj3qIKcv3zIjJwqHZnH51aiiSHNOZr6AS123YeaynNOBXUBfGdRaCo6AXt29K4air6nT1TPqZulZqR2x5dMN2Q5/XxNLijafkGVY+youv+zm5mJA2qjT5jhZEqgZA0roCEyw=="
+  }
 }
