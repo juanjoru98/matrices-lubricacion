@@ -1,6 +1,6 @@
 {
  "esquema": 2,
- "actualizado": null,
+ "actualizado": "2026-10-29T11:57:23-05:00",
  "plantilla": {
   "lugar": "Proyecto Buriticá",
   "departamento": "Departamento de Tribología",
@@ -486,450 +486,6 @@
    "modelo": "120M",
    "flota": "Grader",
    "plantilla": "cat-moto-grade-120m"
-  },
-  {
-   "id": "DL006",
-   "activo": "SIMBA 1254",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/simba-1254.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "HM-68-M-G2",
-     "lubricante": "Chevron Hydraulic Oil AW-M 68",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "COMPRESOR",
-     "codigoLIS": "DAH-46-S-PAO",
-     "lubricante": "Chevron cetus PAO ISO 46",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Hydraulic Oil AW-M 68",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo Gear EP SAE 85W140",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron cetus PAO ISO 46",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/simba-1254.jpg",
-   "equipo": "DL006",
-   "descripcion": "JUMBO 1254 SIMBA EPIROC DL006",
-   "modelo": "1254",
-   "flota": "Long Hole",
-   "plantilla": "simba-1254"
-  },
-  {
-   "id": "DL007",
-   "activo": "SIMBA 1254",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/simba-1254.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "HM-68-M-G2",
-     "lubricante": "Chevron Hydraulic Oil AW-M 68",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "COMPRESOR",
-     "codigoLIS": "DAH-46-S-PAO",
-     "lubricante": "Chevron cetus PAO ISO 46",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Hydraulic Oil AW-M 68",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo Gear EP SAE 85W140",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron cetus PAO ISO 46",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/simba-1254.jpg",
-   "equipo": "DL007",
-   "descripcion": "JUMBO 1254 SIMBA EPIROC DL007",
-   "modelo": "1254",
-   "flota": "Long Hole",
-   "plantilla": "simba-1254"
-  },
-  {
-   "id": "DL008",
-   "activo": "SIMBA 1254",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/simba-1254.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "HM-68-M-G2",
-     "lubricante": "Chevron Hydraulic Oil AW-M 68",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "COMPRESOR",
-     "codigoLIS": "DAH-46-S-PAO",
-     "lubricante": "Chevron cetus PAO ISO 46",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Hydraulic Oil AW-M 68",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo Gear EP SAE 85W140",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron cetus PAO ISO 46",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/simba-1254.jpg",
-   "equipo": "DL008",
-   "descripcion": "JUMBO 1254 SIMBA EPIROC DL008",
-   "modelo": "1254",
-   "flota": "Long Hole",
-   "plantilla": "simba-1254"
-  },
-  {
-   "id": "DL009",
-   "activo": "SIMBA 1254",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/simba-1254.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "HM-68-M-G2",
-     "lubricante": "Chevron Hydraulic Oil AW-M 68",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP SAE 85W140",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "COMPRESOR",
-     "codigoLIS": "DAH-46-S-PAO",
-     "lubricante": "Chevron cetus PAO ISO 46",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Hydraulic Oil AW-M 68",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo Gear EP SAE 85W140",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron cetus PAO ISO 46",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/simba-1254.jpg",
-   "equipo": "DL009",
-   "descripcion": "JUMBO 1254 SIMBA EPIROC DL009",
-   "modelo": "1254",
-   "flota": "Long Hole",
-   "plantilla": "simba-1254"
   },
   {
    "id": "A001",
@@ -2031,117 +1587,6 @@
    "plantilla": "lubetruck-600r-rdh"
   },
   {
-   "id": "L005",
-   "activo": "NORMET MULTIMEC 6600",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/normet-multimec-6600.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "3,3",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "HM-68-M-G2",
-     "lubricante": "Chevron Hydraulic Oil AW-M 68",
-     "cantidad": "42,3",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "TRANSMISIÓN",
-     "codigoLIS": "CKT-30-M-G2",
-     "lubricante": "Chevron Delo TORQFORCE SAE 30",
-     "cantidad": "8",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP-5 SAE 85W140",
-     "cantidad": "4",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-85W140-M-G2",
-     "lubricante": "Chevron Delo Gear EP-5 SAE 85W140",
-     "cantidad": "0,6",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "N/A",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Hydraulic Oil AW-M 68",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron DELO GEAR EP-5 85W140",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=486913&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo TORQFORCE SAE 30",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/normet-multimec-6600.jpg",
-   "equipo": "L005",
-   "descripcion": "TRUCK 6600 NORMET L005",
-   "modelo": "6600",
-   "flota": "Scissor Lift",
-   "plantilla": "normet-multimec-6600"
-  },
-  {
    "id": "DP001",
    "activo": "CAT 740 EJ",
    "codigo": "",
@@ -2809,6 +2254,561 @@
    "modelo": "988K",
    "flota": "Front Loader",
    "plantilla": "cat-988k"
+  },
+  {
+   "id": "DL006",
+   "activo": "SIMBA 1254",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/simba-1254.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "HM-68-M-G2",
+     "lubricante": "Chevron Hydraulic Oil AW-M 68",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "COMPRESOR",
+     "codigoLIS": "DAH-46-S-PAO",
+     "lubricante": "Chevron cetus PAO ISO 46",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Hydraulic Oil AW-M 68",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo Gear EP SAE 85W140",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron cetus PAO ISO 46",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/simba-1254.jpg",
+   "equipo": "DL006",
+   "descripcion": "JUMBO 1254 SIMBA EPIROC DL006",
+   "modelo": "1254",
+   "flota": "Long Hole",
+   "plantilla": "simba-1254"
+  },
+  {
+   "id": "DL007",
+   "activo": "SIMBA 1254",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/simba-1254.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "HM-68-M-G2",
+     "lubricante": "Chevron Hydraulic Oil AW-M 68",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "COMPRESOR",
+     "codigoLIS": "DAH-46-S-PAO",
+     "lubricante": "Chevron cetus PAO ISO 46",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Hydraulic Oil AW-M 68",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo Gear EP SAE 85W140",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron cetus PAO ISO 46",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/simba-1254.jpg",
+   "equipo": "DL007",
+   "descripcion": "JUMBO 1254 SIMBA EPIROC DL007",
+   "modelo": "1254",
+   "flota": "Long Hole",
+   "plantilla": "simba-1254"
+  },
+  {
+   "id": "DL008",
+   "activo": "SIMBA 1254",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/simba-1254.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "HM-68-M-G2",
+     "lubricante": "Chevron Hydraulic Oil AW-M 68",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "COMPRESOR",
+     "codigoLIS": "DAH-46-S-PAO",
+     "lubricante": "Chevron cetus PAO ISO 46",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Hydraulic Oil AW-M 68",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo Gear EP SAE 85W140",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron cetus PAO ISO 46",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/simba-1254.jpg",
+   "equipo": "DL008",
+   "descripcion": "JUMBO 1254 SIMBA EPIROC DL008",
+   "modelo": "1254",
+   "flota": "Long Hole",
+   "plantilla": "simba-1254"
+  },
+  {
+   "id": "DL009",
+   "activo": "SIMBA 1254",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/simba-1254.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "HM-68-M-G2",
+     "lubricante": "Chevron Hydraulic Oil AW-M 68",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP SAE 85W140",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "COMPRESOR",
+     "codigoLIS": "DAH-46-S-PAO",
+     "lubricante": "Chevron cetus PAO ISO 46",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Hydraulic Oil AW-M 68",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo Gear EP SAE 85W140",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=76981&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron cetus PAO ISO 46",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=395532&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/simba-1254.jpg",
+   "equipo": "DL009",
+   "descripcion": "JUMBO 1254 SIMBA EPIROC DL009",
+   "modelo": "1254",
+   "flota": "Long Hole",
+   "plantilla": "simba-1254"
+  },
+  {
+   "id": "L005",
+   "activo": "NORMET MULTIMEC 6600",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/normet-multimec-6600.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "3,3",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "HM-68-M-G2",
+     "lubricante": "Chevron Hydraulic Oil AW-M 68",
+     "cantidad": "42,3",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "TRANSMISIÓN",
+     "codigoLIS": "CKT-30-M-G2",
+     "lubricante": "Chevron Delo TORQFORCE SAE 30",
+     "cantidad": "8",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP-5 SAE 85W140",
+     "cantidad": "4",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-85W140-M-G2",
+     "lubricante": "Chevron Delo Gear EP-5 SAE 85W140",
+     "cantidad": "0,6",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "N/A",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Hydraulic Oil AW-M 68",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=412567&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron DELO GEAR EP-5 85W140",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=486913&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo TORQFORCE SAE 30",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/normet-multimec-6600.jpg",
+   "equipo": "L005",
+   "descripcion": "TRUCK 6600 NORMET L005",
+   "modelo": "6600",
+   "flota": "Scissor Lift",
+   "plantilla": "normet-multimec-6600"
   },
   {
    "id": "R004",
@@ -20603,7 +20603,7 @@
    "codigo": "",
    "lugar": "Proyecto Buriticá",
    "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
+   "actualizado": "2026-10-29T11:57:23-05:00",
    "imagen": "img/equipos/th430-sandvik.jpg",
    "puntos": [
     {
@@ -20612,9 +20612,9 @@
      "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
      "cantidad": "12,7",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "500 H",
      "metodo": "Manual",
-     "intervaloMuestreo": "",
+     "intervaloMuestreo": "250 H",
      "revisionNivel": ""
     },
     {
@@ -22428,6 +22428,228 @@
    "plantilla": "th545-sandvik"
   },
   {
+   "id": "H006",
+   "activo": "CAT TL642D",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/cat-tl642d.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "2,4",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "CKT-10W-M-G2",
+     "lubricante": "Chevron Delo TORQFORCE SAE 10W",
+     "cantidad": "41",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "TRANSMISIÓN Y CAJA DE TRANSFERENCIA",
+     "codigoLIS": "CKT-30-M-G2",
+     "lubricante": "Chevron Delo TORQFORCE SAE 30",
+     "cantidad": "4,3",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-80W90-M-G2",
+     "lubricante": "Chevron Delo Gear LS SAE 80W90",
+     "cantidad": "3,8",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-80W90-M-G2",
+     "lubricante": "Chevron Delo Gear LS SAE 80W90",
+     "cantidad": "0,7",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "N/A",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo Gear LS SAE 80W90",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=516409&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo TORQFORCE SAE 30",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo TORQFORCE SAE 10W",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/cat-tl642d.jpg",
+   "equipo": "H006",
+   "descripcion": "TELEHANDLER TL642D CATERPILLAR H006",
+   "modelo": "TL642D",
+   "flota": "Telehandler",
+   "plantilla": "cat-tl642d"
+  },
+  {
+   "id": "H010",
+   "activo": "CAT TL642D",
+   "codigo": "",
+   "lugar": "Proyecto Buriticá",
+   "fechaElaboracion": "2024-01-08",
+   "actualizado": null,
+   "imagen": "img/equipos/cat-tl642d.jpg",
+   "puntos": [
+    {
+     "componente": "MOTOR",
+     "codigoLIS": "CK4-15W40-B-G3",
+     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
+     "cantidad": "2,4",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "HIDRÁULICO",
+     "codigoLIS": "CKT-10W-M-G2",
+     "lubricante": "Chevron Delo TORQFORCE SAE 10W",
+     "cantidad": "41",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "TRANSMISIÓN Y CAJA DE TRANSFERENCIA",
+     "codigoLIS": "CKT-30-M-G2",
+     "lubricante": "Chevron Delo TORQFORCE SAE 30",
+     "cantidad": "4,3",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "DIFERENCIALES",
+     "codigoLIS": "GL5-80W90-M-G2",
+     "lubricante": "Chevron Delo Gear LS SAE 80W90",
+     "cantidad": "3,8",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "MANDOS FINALES",
+     "codigoLIS": "GL5-80W90-M-G2",
+     "lubricante": "Chevron Delo Gear LS SAE 80W90",
+     "cantidad": "0,7",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    },
+    {
+     "componente": "LÍQUIDO REFRIGERANTE",
+     "codigoLIS": "N/A",
+     "lubricante": "Chevron ELC Antifreeze",
+     "cantidad": "N/A",
+     "tarea": "Lubricado",
+     "intervaloCambio": "",
+     "metodo": "Manual",
+     "intervaloMuestreo": "",
+     "revisionNivel": ""
+    }
+   ],
+   "fichas": [
+    {
+     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
+     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo Gear LS SAE 80W90",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=516409&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo TORQFORCE SAE 30",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
+    },
+    {
+     "nombre": "Chevron Delo TORQFORCE SAE 10W",
+     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
+    }
+   ],
+   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
+   "primerosAuxilios": {
+    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
+    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
+    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
+    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
+    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
+   },
+   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
+   "departamento": "Departamento de Tribología",
+   "foto": "img/fotos/cat-tl642d.jpg",
+   "equipo": "H010",
+   "descripcion": "TELEHANDLER TL642D CATERPILLAR H010",
+   "modelo": "TL642D",
+   "flota": "Telehandler",
+   "plantilla": "cat-tl642d"
+  },
+  {
    "id": "H001",
    "activo": "CAT TL1055D",
    "codigo": "",
@@ -22759,228 +22981,6 @@
    "modelo": "TL1055D",
    "flota": "Telehandler",
    "plantilla": "cat-tl1055d"
-  },
-  {
-   "id": "H006",
-   "activo": "CAT TL642D",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/cat-tl642d.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "2,4",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "CKT-10W-M-G2",
-     "lubricante": "Chevron Delo TORQFORCE SAE 10W",
-     "cantidad": "41",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "TRANSMISIÓN Y CAJA DE TRANSFERENCIA",
-     "codigoLIS": "CKT-30-M-G2",
-     "lubricante": "Chevron Delo TORQFORCE SAE 30",
-     "cantidad": "4,3",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-80W90-M-G2",
-     "lubricante": "Chevron Delo Gear LS SAE 80W90",
-     "cantidad": "3,8",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-80W90-M-G2",
-     "lubricante": "Chevron Delo Gear LS SAE 80W90",
-     "cantidad": "0,7",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "N/A",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo Gear LS SAE 80W90",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=516409&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo TORQFORCE SAE 30",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo TORQFORCE SAE 10W",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/cat-tl642d.jpg",
-   "equipo": "H006",
-   "descripcion": "TELEHANDLER TL642D CATERPILLAR H006",
-   "modelo": "TL642D",
-   "flota": "Telehandler",
-   "plantilla": "cat-tl642d"
-  },
-  {
-   "id": "H010",
-   "activo": "CAT TL642D",
-   "codigo": "",
-   "lugar": "Proyecto Buriticá",
-   "fechaElaboracion": "2024-01-08",
-   "actualizado": null,
-   "imagen": "img/equipos/cat-tl642d.jpg",
-   "puntos": [
-    {
-     "componente": "MOTOR",
-     "codigoLIS": "CK4-15W40-B-G3",
-     "lubricante": "Chevron Delo 400 XLE SB SAE 15W40",
-     "cantidad": "2,4",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "HIDRÁULICO",
-     "codigoLIS": "CKT-10W-M-G2",
-     "lubricante": "Chevron Delo TORQFORCE SAE 10W",
-     "cantidad": "41",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "TRANSMISIÓN Y CAJA DE TRANSFERENCIA",
-     "codigoLIS": "CKT-30-M-G2",
-     "lubricante": "Chevron Delo TORQFORCE SAE 30",
-     "cantidad": "4,3",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "DIFERENCIALES",
-     "codigoLIS": "GL5-80W90-M-G2",
-     "lubricante": "Chevron Delo Gear LS SAE 80W90",
-     "cantidad": "3,8",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "MANDOS FINALES",
-     "codigoLIS": "GL5-80W90-M-G2",
-     "lubricante": "Chevron Delo Gear LS SAE 80W90",
-     "cantidad": "0,7",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    },
-    {
-     "componente": "LÍQUIDO REFRIGERANTE",
-     "codigoLIS": "N/A",
-     "lubricante": "Chevron ELC Antifreeze",
-     "cantidad": "N/A",
-     "tarea": "Lubricado",
-     "intervaloCambio": "",
-     "metodo": "Manual",
-     "intervaloMuestreo": "",
-     "revisionNivel": ""
-    }
-   ],
-   "fichas": [
-    {
-     "nombre": "Chevron Delo 400 XLE SB SAE 15W40",
-     "url": "https://cglapps.chevron.com/MSDSPDS/PDSDetailPage.aspx?docDataId=482303&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo Gear LS SAE 80W90",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=516409&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo TORQFORCE SAE 30",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
-    },
-    {
-     "nombre": "Chevron Delo TORQFORCE SAE 10W",
-     "url": "https://cglapps.chevron.com/msdspds/PDSDetailPage.aspx?docDataId=431199&docFormat=PDF"
-    }
-   ],
-   "advertencia": "Por favor recordar usar los implementos de seguridad, los aceites y grasas calientes pueden causar quemaduras y heridas graves durante la manipulación de relubricado. Se recomienda realizar mantenimientos preventivos para observar el funcionamiento tribológico, detectar taponamientos o alzas de temperatura en el sistema. Recordar la importancia de la buena estibación y limpieza de los implementos de lubricación. Se recomienda suministrar esta ficha de lubricación al OEM para su aprobación de garantía. Antes de accionar los equipos se debe verificar los niveles. LAS GRÁFICAS DE PUNTOS DE LUBRICACIÓN PUEDEN VARIAR DESDE EL MANUAL VS IN SITU, POR ENDE EL LUBRICADOR Y JEFE DE LUBRICADORES DEBEN VERIFICAR EN CAMPO LOS PUNTOS DE LUBRICADO.",
-   "primerosAuxilios": {
-    "ojos": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese los lentes de contacto si los trae puestos y lávese los ojos con agua.",
-    "piel": "No hacen falta medidas específicas de primeros auxilios. A modo de precaución, quítese la ropa y los zapatos si resultan contaminados. Para quitarse la sustancia de la piel, use agua y jabón. Deseche la ropa y los zapatos contaminados o límpielos a cabalidad antes de volverlos a usar.",
-    "ingestion": "No hacen falta medidas específicas de primeros auxilios. No induzca el vómito. A modo de precaución, procure asesoramiento médico inmediato.",
-    "inhalacion": "No hacen falta medidas específicas de primeros auxilios. Si ha sido expuesto a niveles excesivos de la sustancia en el aire, traslade a la persona expuesta al aire fresco. Procure atención médica si sobreviene tos o molestia al respirar.",
-    "nota": "En caso de presencia de síntomas y efectos graves, por favor revisar la ficha de seguridad suministrada al área competente y procure atención médica inmediata."
-   },
-   "incendios": "Use niebla de agua, espuma, materiales químicos secos y dióxido de carbono (CO₂) para extinguir las llamas.",
-   "departamento": "Departamento de Tribología",
-   "foto": "img/fotos/cat-tl642d.jpg",
-   "equipo": "H010",
-   "descripcion": "TELEHANDLER TL642D CATERPILLAR H010",
-   "modelo": "TL642D",
-   "flota": "Telehandler",
-   "plantilla": "cat-tl642d"
   },
   {
    "id": "K004",

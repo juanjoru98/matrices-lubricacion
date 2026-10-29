@@ -1,4 +1,8 @@
 {
   "esquema": 1,
-  "cifrado": null
+  "registros": 1,
+  "cifrado": {
+    "iv": "dj78zeQWEbxnW2mJ",
+    "data": "5ANC5Msbim6hSpRRkhzXgQ5PQqhfthKdIKG6e/uBgMh54DrRmJWkvEiFLZ0BB5GR/fpKIADx8/7bgVqatbPHHatKotAgSeAS9y/2/I1QlEIFaIq/MY+gspYWv45Aa6GdXjr43t8piDnYqKusqEmRsyHSQ+MVWG+g+/+YxHrV/3TtPIJ7HBa0tJzAAH5BzUlPvcyn9LBLsoVXpnNXe+gmqw+wrgwMAjDTYKWLhp1Zh6H3Og/Yt2mnQ/pyRH8+tNSYRHpZ+gisPu03X1eLqoHb3WFJiq8hQI8LorcwflSv7hSQM6wYI2RKpP/QUqaS+EAXODWBE8E+B1ZbERr3Gdm+MMOh6kSomLUaoY0+LICzryjYcNwQ1Ech6NgJHfarbUtM5fuRrLJzmq0ltqhaFmOt28+FQbwb5/W8u9mzQJza1MJunc8FRAUU0EoOSH5lrDL/5QXflpwtlRsMud5jhor90aKi7BixNGozvvIL1mEvzpEItKUPPtNWmgsP+FnyNR1rcbgChoAlWv93dV5RyFo97tASdj/c2w8j6uLSgY4YNQ=="
+  }
 }
