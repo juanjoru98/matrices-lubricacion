@@ -1,8 +1,4 @@
 {
   "esquema": 1,
-  "registros": 2,
-  "cifrado": {
-    "iv": "zZc0KdzCVIWsPteE",
-    "data": "tPvsMuBpdSKxSSBbTifQXQU/3o7xYqHyJxaEwKbdiXcwX//VF7uVPckrisRVQDaCRzO7awIs+pNF4MYb+1+GVE9VhkojFXM/hgaQjtSu1KycjU0VzoNDUDHICicMAVVVJ6yoq4wvezH+yVRvr2NG+Dgrp0+6zdNQMMRMTFYGxZbvhjn3KpV0K8fri5SK17pAuchYJgUkX+KXWF9yGCeedxzShU60TFMp1RRztLACA4UmecvmdHS/sjQND7/lQ05X1FO+N7Eq7afc3pQbKzOJ7yUgByekZ57eAjHMDvUhnRpkrSCyI2TL32dczZ+HPeROEwdCcPK2tLTDJBK3TlQH0kwiKgfO/hE/ZAz5KM8XycK6RaYrsAglUiMYv8A43ISpcnvh8avwNDnfJk134l4uaAF5IPY3XvWeBuMuLAOWalW9ed1kjhSKsaij969pLrCkyKO2LZ3kfXuvv14Pz7GF2LPCE7tn9zISQ5cRBKuEzT6LRSWEfpqcIQEXsNiKv/gu73z99IGxqZQRX95xl8tIOeedadDwxMpq8P4K0CZuEsQnvAtw0q9SDrOmBO/YrlBaBmZbzCjl9aM8EcINDiYieuh6SBhkW3Wl1EM+pddTyke1BCT/+9lkd+WwcbdZXYybUw8Skt3MWvG06fIGAhZboiH6QP5z3Lv2N4FhyLiRKhgfPcfZ0wK3NpA0aSQ4e3Pb/CszDo4pBw7SeDGiNYiNaZVz1yg03nlBGrPH1jV4C21OeVbAKkCkYHGBytUlCgN/xQ=="
-  }
+  "cifrado": null
 }

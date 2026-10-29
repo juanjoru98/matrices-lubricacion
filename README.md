@@ -4,7 +4,7 @@ Página web (GitHub Pages) con la **matriz de cambio de aceite de cada equipo** 
 
 - Cada equipo arrancó con la matriz de su modelo tomada del archivo `MATRIZ_LUBRICACION_CNL_FINAL` (80 matrices por modelo, que quedan como plantillas), cada una con su diagrama de puntos tal como está en Excel y los enlaces a las fichas técnicas de los lubricantes (los QR de «Ver información de lubricante»). Las hojas de ENGRASE no se incluyeron.
 - **Editar matriz** y **Nueva matriz** piden la contraseña de edición (`MATRIZEQUIPOS26`).
-- Antes de guardar, el editor debe escribir su **nombre** y su **documento de identificación**. La página agrega sola la **fecha**, la **matriz** y la lista de **cambios realizados**.
+- Antes de guardar, el editor debe escribir su **nombre**, su **documento de identificación** y la **justificación** del cambio. La página agrega sola la **fecha**, la **matriz** y la lista de **cambios realizados**.
 - El historial se guarda **cifrado** en el repositorio. Solo se puede ver dentro de la página (botón *Historial*, con la contraseña) y se puede descargar en CSV para Excel.
 - **Cada equipo tiene su propia matriz y su propio QR** (por ejemplo `?u=T001`). Al editar T001 solo cambia T001, así que varios equipos del mismo modelo pueden tener lubricantes, cantidades o intervalos distintos. Si quiere repetir un cambio en varios equipos, use «Aplicar también a otros equipos» en el editor.
 - El inicio tiene buscador general y filtros por **flota, modelo y equipo** (tomados del IH08), con selección múltiple, buscador y borrador de filtros.

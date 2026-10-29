@@ -1122,6 +1122,7 @@ function dialogoRegistro(cambios) {
     <p>Antes de guardar, identifíquese. Estos datos quedan en el historial de cambios.</p>
     <label class="campo"><span>Nombre de la persona que actualiza <span class="req">*</span></span><input id="r-nombre" autocomplete="name" required></label>
     <label class="campo"><span>Documento de identificación <span class="req">*</span></span><input id="r-doc" autocomplete="off" required></label>
+    <label class="campo"><span>Justificación del cambio <span class="req">*</span></span><textarea id="r-just" rows="3" required placeholder="Ej.: Actualización según manual del fabricante / recomendación de análisis de aceite / cambio de lubricante aprobado"></textarea><small>Explique por qué se hace el cambio. Queda en el historial.</small></label>
     <div class="resumen">
       <h3>Se registra automáticamente</h3>
       <dl>
@@ -1140,19 +1141,20 @@ function dialogoRegistro(cambios) {
   f.addEventListener('input', (e) => { e.target.closest('.campo')?.classList.remove('invalido'); $('#r-error').hidden = true; });
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const nombre = norm($('#r-nombre').value), doc = norm($('#r-doc').value), err = $('#r-error');
+    const nombre = norm($('#r-nombre').value), doc = norm($('#r-doc').value), just = norm($('#r-just').value), err = $('#r-error');
     $$('.campo', f).forEach((c) => c.classList.remove('invalido'));
     const faltan = [];
     if (nombre.length < 3) { faltan.push('el nombre completo'); $('#r-nombre').closest('.campo').classList.add('invalido'); }
     if (doc.length < 4) { faltan.push('el documento de identificación'); $('#r-doc').closest('.campo').classList.add('invalido'); }
-    if (faltan.length) { err.textContent = `Falta ${faltan.join(' y ')}.`; err.hidden = false; return; }
+    if (just.length < 10) { faltan.push('la justificación (mínimo 10 caracteres)'); $('#r-just').closest('.campo').classList.add('invalido'); }
+    if (faltan.length) { err.textContent = `Falta ${faltan.length > 1 ? `${faltan.slice(0, -1).join(', ')} y ${faltan.at(-1)}` : faltan[0]}.`; err.hidden = false; return; }
     err.hidden = true;
     const btn = $('#r-ok');
     btn.disabled = true; f.setAttribute('data-ocupado', '');
     $$('[data-cerrar]', f).forEach((x) => { x.disabled = true; });
     const prog = (t) => { $('#r-progreso').innerHTML = `<p class="progreso"><span class="giro" aria-hidden="true"></span>${esc(t)}</p>`; };
     try {
-      const eq = await guardarEnGitHub(ed, { nombre, documento: doc, accion: ed.modo === 'nuevo' ? 'Creación' : 'Actualización', matriz: norm(ed.borrador.equipo), aplicadoA: [...ed.aplicarA], cambios }, prog);
+      const eq = await guardarEnGitHub(ed, { nombre, documento: doc, justificacion: just, accion: ed.modo === 'nuevo' ? 'Creación' : 'Actualización', matriz: norm(ed.borrador.equipo), aplicadoA: [...ed.aplicarA], cambios }, prog);
       estado.editor = null;
       dialogoExito(eq, ed.modo);
     } catch (x) {
@@ -1279,6 +1281,7 @@ async function vistaHistorial() {
   $('#h-lista').innerHTML = regs.length ? `<ul class="historial">${regs.map((r) => `<li class="h-item">
       <div class="h-cab"><span class="etiqueta ${r.accion === 'Creación' ? 'nueva' : ''}">${esc(r.accion)}</span><b>${esc(r.matriz)}</b><span class="h-fecha">${esc(fechaHora(r.fecha))}</span></div>
       <p class="h-persona">${esc(r.nombre)} · Doc. ${esc(r.documento)}${(r.aplicadoA || []).length ? ` · también a ${esc(r.aplicadoA.join(', '))}` : ''}</p>
+      ${r.justificacion ? `<p class="h-just"><b>Justificación:</b> ${esc(r.justificacion)}</p>` : ''}
       <details><summary>${(r.cambios || []).length} cambio${(r.cambios || []).length === 1 ? '' : 's'} realizado${(r.cambios || []).length === 1 ? '' : 's'}</summary>
       <ul class="cambios">${(r.cambios || []).map((c) => `<li>${esc(c)}</li>`).join('')}</ul></details>
     </li>`).join('')}</ul>`
@@ -1288,8 +1291,8 @@ async function vistaHistorial() {
 function descargarCSV() {
   const regs = estado.historial || [];
   const q = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const filas = [['Fecha', 'Acción', 'Equipo', 'Aplicado también a', 'Nombre', 'Documento', 'Cambios realizados']]
-    .concat(regs.map((r) => [fechaHora(r.fecha), r.accion, r.matriz, (r.aplicadoA || []).join(', '), r.nombre, r.documento, (r.cambios || []).join(' | ')]));
+  const filas = [['Fecha', 'Acción', 'Equipo', 'Aplicado también a', 'Nombre', 'Documento', 'Justificación', 'Cambios realizados']]
+    .concat(regs.map((r) => [fechaHora(r.fecha), r.accion, r.matriz, (r.aplicadoA || []).join(', '), r.nombre, r.documento, r.justificacion || '', (r.cambios || []).join(' | ')]));
   const blob = new Blob(['﻿' + filas.map((f) => f.map(q).join(';')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
   descargarBlob(blob, `Historial_matrices_${hoyISO()}.csv`);
 }
