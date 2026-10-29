@@ -1,6 +1,6 @@
 {
  "esquema": 2,
- "actualizado": "2026-10-29T11:57:23-05:00",
+ "actualizado": "2026-10-29T15:40:16-05:00",
  "plantilla": {
   "lugar": "Proyecto Buriticá",
   "departamento": "Departamento de Tribología",
@@ -20603,7 +20603,7 @@
    "codigo": "",
    "lugar": "Proyecto Buriticá",
    "fechaElaboracion": "2024-01-08",
-   "actualizado": "2026-10-29T11:57:23-05:00",
+   "actualizado": "2026-10-29T15:40:16-05:00",
    "imagen": "img/equipos/th430-sandvik.jpg",
    "puntos": [
     {
@@ -20623,9 +20623,9 @@
      "lubricante": "Chevron Delo TORQFORCE SAE 30",
      "cantidad": "17,2",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "1000 H",
      "metodo": "Manual",
-     "intervaloMuestreo": "",
+     "intervaloMuestreo": "500",
      "revisionNivel": ""
     },
     {
@@ -20634,9 +20634,9 @@
      "lubricante": "Chevron Hydraulic Oil AW-M 68",
      "cantidad": "70",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "2000",
      "metodo": "Manual",
-     "intervaloMuestreo": "",
+     "intervaloMuestreo": "1000",
      "revisionNivel": ""
     },
     {
@@ -20645,7 +20645,7 @@
      "lubricante": "Chevron Hydraulic Oil AW-M 68",
      "cantidad": "20",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "1000",
      "metodo": "Manual",
      "intervaloMuestreo": "",
      "revisionNivel": ""
@@ -20656,9 +20656,9 @@
      "lubricante": "Chevron Delo Gear LS SAE 80W90",
      "cantidad": "17",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "500",
      "metodo": "Manual",
-     "intervaloMuestreo": "",
+     "intervaloMuestreo": "250",
      "revisionNivel": ""
     },
     {
@@ -20667,7 +20667,7 @@
      "lubricante": "Chevron Delo Gear LS SAE 80W90",
      "cantidad": "9",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "1000",
      "metodo": "Manual",
      "intervaloMuestreo": "",
      "revisionNivel": ""
@@ -20678,7 +20678,7 @@
      "lubricante": "Chevron ELC Antifreeze",
      "cantidad": "N/A",
      "tarea": "Lubricado",
-     "intervaloCambio": "",
+     "intervaloCambio": "8000",
      "metodo": "Manual",
      "intervaloMuestreo": "",
      "revisionNivel": ""
