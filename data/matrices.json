@@ -1,6 +1,6 @@
 {
  "esquema": 2,
- "actualizado": "2026-10-29T15:40:16-05:00",
+ "actualizado": "2026-10-29T15:46:54-05:00",
  "plantilla": {
   "lugar": "Proyecto Buriticá",
   "departamento": "Departamento de Tribología",
@@ -20603,7 +20603,7 @@
    "codigo": "",
    "lugar": "Proyecto Buriticá",
    "fechaElaboracion": "2024-01-08",
-   "actualizado": "2026-10-29T15:40:16-05:00",
+   "actualizado": "2026-10-29T15:46:54-05:00",
    "imagen": "img/equipos/th430-sandvik.jpg",
    "puntos": [
     {
@@ -20658,7 +20658,7 @@
      "tarea": "Lubricado",
      "intervaloCambio": "500",
      "metodo": "Manual",
-     "intervaloMuestreo": "250",
+     "intervaloMuestreo": "500",
      "revisionNivel": ""
     },
     {
